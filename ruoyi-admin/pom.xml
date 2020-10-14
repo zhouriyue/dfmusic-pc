@@ -12,7 +12,7 @@
     <artifactId>ruoyi-admin</artifactId>
 
     <description>
-        web服务入口
+        <!--web服务入口-->
     </description>
 
     <dependencies>
