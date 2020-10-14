@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.DownloadMapper">
+    
+    <resultMap type="Download" id="DownloadResult">
+        <result property="dlId"    column="dl_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="songId"    column="song_id"    />
+        <result property="toneQuality"    column="tone_quality"    />
+        <result property="dlLenght"    column="dl_lenght"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectDownloadVo">
+        select dl_id, user_id, song_id, tone_quality, dl_lenght, create_time, update_time, del_time, del_flag from download
+    </sql>
+
+    <select id="selectDownloadList" parameterType="Download" resultMap="DownloadResult">
+        <include refid="selectDownloadVo"/>
+        <where>  
+            <if test="dlId != null "> and dl_id = #{dlId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="songId != null "> and song_id = #{songId}</if>
+            <if test="toneQuality != null  and toneQuality != ''"> and tone_quality = #{toneQuality}</if>
+        </where>
+    </select>
+    
+    <select id="selectDownloadById" parameterType="Long" resultMap="DownloadResult">
+        <include refid="selectDownloadVo"/>
+        where dl_id = #{dlId}
+    </select>
+        
+    <insert id="insertDownload" parameterType="Download" useGeneratedKeys="true" keyProperty="dlId">
+        insert into download
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="songId != null">song_id,</if>
+            <if test="toneQuality != null">tone_quality,</if>
+            <if test="dlLenght != null">dl_lenght,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="songId != null">#{songId},</if>
+            <if test="toneQuality != null">#{toneQuality},</if>
+            <if test="dlLenght != null">#{dlLenght},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDownload" parameterType="Download">
+        update download
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="songId != null">song_id = #{songId},</if>
+            <if test="toneQuality != null">tone_quality = #{toneQuality},</if>
+            <if test="dlLenght != null">dl_lenght = #{dlLenght},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where dl_id = #{dlId}
+    </update>
+
+    <delete id="deleteDownloadById" parameterType="Long">
+        delete from download where dl_id = #{dlId}
+    </delete>
+
+    <delete id="deleteDownloadByIds" parameterType="String">
+        delete from download where dl_id in 
+        <foreach item="dlId" collection="array" open="(" separator="," close=")">
+            #{dlId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SongTypeMapper">
+    
+    <resultMap type="SongType" id="SongTypeResult">
+        <result property="stId"    column="st_id"    />
+        <result property="stName"    column="st_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSongTypeVo">
+        select st_id, st_name, create_time, update_time, del_time, del_flag from song_type
+    </sql>
+
+    <select id="selectSongTypeList" parameterType="SongType" resultMap="SongTypeResult">
+        <include refid="selectSongTypeVo"/>
+        <where>  
+            <if test="stId != null "> and st_id = #{stId}</if>
+            <if test="stName != null  and stName != ''"> and st_name like concat('%', #{stName}, '%')</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSongTypeById" parameterType="Long" resultMap="SongTypeResult">
+        <include refid="selectSongTypeVo"/>
+        where st_id = #{stId}
+    </select>
+        
+    <insert id="insertSongType" parameterType="SongType" useGeneratedKeys="true" keyProperty="stId">
+        insert into song_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stName != null">st_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stName != null">#{stName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSongType" parameterType="SongType">
+        update song_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stName != null">st_name = #{stName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where st_id = #{stId}
+    </update>
+
+    <delete id="deleteSongTypeById" parameterType="Long">
+        delete from song_type where st_id = #{stId}
+    </delete>
+
+    <delete id="deleteSongTypeByIds" parameterType="String">
+        delete from song_type where st_id in 
+        <foreach item="stId" collection="array" open="(" separator="," close=")">
+            #{stId}
+        </foreach>
+    </delete>
+    
+</mapper>

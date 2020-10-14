@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.RechargeMapper">
+    
+    <resultMap type="Recharge" id="RechargeResult">
+        <result property="recId"    column="rec_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectRechargeVo">
+        select rec_id, user_id, amount, create_time, update_time, del_time, del_flag from recharge
+    </sql>
+
+    <select id="selectRechargeList" parameterType="Recharge" resultMap="RechargeResult">
+        <include refid="selectRechargeVo"/>
+        <where>  
+            <if test="recId != null "> and rec_id = #{recId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectRechargeById" parameterType="Long" resultMap="RechargeResult">
+        <include refid="selectRechargeVo"/>
+        where rec_id = #{recId}
+    </select>
+        
+    <insert id="insertRecharge" parameterType="Recharge" useGeneratedKeys="true" keyProperty="recId">
+        insert into recharge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRecharge" parameterType="Recharge">
+        update recharge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where rec_id = #{recId}
+    </update>
+
+    <delete id="deleteRechargeById" parameterType="Long">
+        delete from recharge where rec_id = #{recId}
+    </delete>
+
+    <delete id="deleteRechargeByIds" parameterType="String">
+        delete from recharge where rec_id in 
+        <foreach item="recId" collection="array" open="(" separator="," close=")">
+            #{recId}
+        </foreach>
+    </delete>
+    
+</mapper>

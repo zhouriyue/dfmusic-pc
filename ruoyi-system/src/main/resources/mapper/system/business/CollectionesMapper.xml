@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.CollectionesMapper">
+    
+    <resultMap type="Collectiones" id="CollectionesResult">
+        <result property="colId"    column="col_id"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="collectBy"    column="collect_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCollectionesVo">
+        select col_id, sl_id, collect_by, create_time, update_time, del_time, del_flag from collectiones
+    </sql>
+
+    <select id="selectCollectionesList" parameterType="Collectiones" resultMap="CollectionesResult">
+        <include refid="selectCollectionesVo"/>
+        <where>  
+            <if test="colId != null "> and col_id = #{colId}</if>
+            <if test="slId != null "> and sl_id = #{slId}</if>
+            <if test="collectBy != null "> and collect_by = #{collectBy}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCollectionesById" parameterType="Long" resultMap="CollectionesResult">
+        <include refid="selectCollectionesVo"/>
+        where col_id = #{colId}
+    </select>
+        
+    <insert id="insertCollectiones" parameterType="Collectiones" useGeneratedKeys="true" keyProperty="colId">
+        insert into collectiones
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="slId != null">sl_id,</if>
+            <if test="collectBy != null">collect_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="slId != null">#{slId},</if>
+            <if test="collectBy != null">#{collectBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCollectiones" parameterType="Collectiones">
+        update collectiones
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="slId != null">sl_id = #{slId},</if>
+            <if test="collectBy != null">collect_by = #{collectBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where col_id = #{colId}
+    </update>
+
+    <delete id="deleteCollectionesById" parameterType="Long">
+        delete from collectiones where col_id = #{colId}
+    </delete>
+
+    <delete id="deleteCollectionesByIds" parameterType="String">
+        delete from collectiones where col_id in 
+        <foreach item="colId" collection="array" open="(" separator="," close=")">
+            #{colId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SonglistMapper">
+    
+    <resultMap type="Songlist" id="SonglistResult">
+        <result property="slId"    column="sl_id"    />
+        <result property="slName"    column="sl_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="slTitle"    column="sl_title"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="colNumber"    column="col_number"    />
+        <result property="commentsNumber"    column="comments_number"    />
+        <result property="shareNumber"    column="share_number"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="detail"    column="detail"    />
+        <result property="isAlbum"    column="is_album"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="isPublic"    column="is_public"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSonglistVo">
+        select sl_id, sl_name, cover_picture, sl_title, play_number, song_number, col_number, comments_number, share_number, create_by, detail, is_album, sin_id, is_public, create_time, update_time, del_time, del_flag from songlist
+    </sql>
+
+    <select id="selectSonglistList" parameterType="Songlist" resultMap="SonglistResult">
+        <include refid="selectSonglistVo"/>
+        <where>  
+            <if test="slId != null "> and sl_id = #{slId}</if>
+            <if test="slName != null  and slName != ''"> and sl_name like concat('%', #{slName}, '%')</if>
+            <if test="coverPicture != null  and coverPicture != ''"> and cover_picture = #{coverPicture}</if>
+            <if test="slTitle != null  and slTitle != ''"> and sl_title = #{slTitle}</if>
+            <if test="playNumber != null "> and play_number = #{playNumber}</if>
+            <if test="songNumber != null "> and song_number = #{songNumber}</if>
+            <if test="colNumber != null "> and col_number = #{colNumber}</if>
+            <if test="commentsNumber != null "> and comments_number = #{commentsNumber}</if>
+            <if test="shareNumber != null "> and share_number = #{shareNumber}</if>
+            <if test="createBy != null "> and create_by = #{createBy}</if>
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+            <if test="isAlbum != null "> and is_album = #{isAlbum}</if>
+            <if test="sinId != null "> and sin_id = #{sinId}</if>
+            <if test="isPublic != null  and isPublic != ''"> and is_public = #{isPublic}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSonglistById" parameterType="Long" resultMap="SonglistResult">
+        <include refid="selectSonglistVo"/>
+        where sl_id = #{slId}
+    </select>
+        
+    <insert id="insertSonglist" parameterType="Songlist" useGeneratedKeys="true" keyProperty="slId">
+        insert into songlist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="slName != null and slName != ''">sl_name,</if>
+            <if test="coverPicture != null">cover_picture,</if>
+            <if test="slTitle != null">sl_title,</if>
+            <if test="playNumber != null">play_number,</if>
+            <if test="songNumber != null">song_number,</if>
+            <if test="colNumber != null">col_number,</if>
+            <if test="commentsNumber != null">comments_number,</if>
+            <if test="shareNumber != null">share_number,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="detail != null">detail,</if>
+            <if test="isAlbum != null">is_album,</if>
+            <if test="sinId != null">sin_id,</if>
+            <if test="isPublic != null">is_public,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="slName != null and slName != ''">#{slName},</if>
+            <if test="coverPicture != null">#{coverPicture},</if>
+            <if test="slTitle != null">#{slTitle},</if>
+            <if test="playNumber != null">#{playNumber},</if>
+            <if test="songNumber != null">#{songNumber},</if>
+            <if test="colNumber != null">#{colNumber},</if>
+            <if test="commentsNumber != null">#{commentsNumber},</if>
+            <if test="shareNumber != null">#{shareNumber},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="detail != null">#{detail},</if>
+            <if test="isAlbum != null">#{isAlbum},</if>
+            <if test="sinId != null">#{sinId},</if>
+            <if test="isPublic != null">#{isPublic},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSonglist" parameterType="Songlist">
+        update songlist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="slName != null and slName != ''">sl_name = #{slName},</if>
+            <if test="coverPicture != null">cover_picture = #{coverPicture},</if>
+            <if test="slTitle != null">sl_title = #{slTitle},</if>
+            <if test="playNumber != null">play_number = #{playNumber},</if>
+            <if test="songNumber != null">song_number = #{songNumber},</if>
+            <if test="colNumber != null">col_number = #{colNumber},</if>
+            <if test="commentsNumber != null">comments_number = #{commentsNumber},</if>
+            <if test="shareNumber != null">share_number = #{shareNumber},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="isAlbum != null">is_album = #{isAlbum},</if>
+            <if test="sinId != null">sin_id = #{sinId},</if>
+            <if test="isPublic != null">is_public = #{isPublic},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where sl_id = #{slId}
+    </update>
+
+    <delete id="deleteSonglistById" parameterType="Long">
+        delete from songlist where sl_id = #{slId}
+    </delete>
+
+    <delete id="deleteSonglistByIds" parameterType="String">
+        delete from songlist where sl_id in 
+        <foreach item="slId" collection="array" open="(" separator="," close=")">
+            #{slId}
+        </foreach>
+    </delete>
+    
+</mapper>

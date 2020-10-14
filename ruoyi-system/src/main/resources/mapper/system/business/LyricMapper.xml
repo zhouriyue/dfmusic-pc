@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.LyricMapper">
+    
+    <resultMap type="Lyric" id="LyricResult">
+        <result property="lyrId"    column="lyr_id"    />
+        <result property="lyrName"    column="lyr_name"    />
+        <result property="lyrUrl"    column="lyr_url"    />
+        <result property="issuingDate"    column="issuing_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectLyricVo">
+        select lyr_id, lyr_name, lyr_url, issuing_date, create_time, update_time, del_time, del_flag from lyric
+    </sql>
+
+    <select id="selectLyricList" parameterType="Lyric" resultMap="LyricResult">
+        <include refid="selectLyricVo"/>
+        <where>  
+            <if test="lyrId != null "> and lyr_id = #{lyrId}</if>
+            <if test="lyrName != null  and lyrName != ''"> and lyr_name like concat('%', #{lyrName}, '%')</if>
+            <if test="issuingDate != null "> and issuing_date = #{issuingDate}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLyricById" parameterType="Long" resultMap="LyricResult">
+        <include refid="selectLyricVo"/>
+        where lyr_id = #{lyrId}
+    </select>
+        
+    <insert id="insertLyric" parameterType="Lyric" useGeneratedKeys="true" keyProperty="lyrId">
+        insert into lyric
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lyrName != null">lyr_name,</if>
+            <if test="lyrUrl != null">lyr_url,</if>
+            <if test="issuingDate != null">issuing_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lyrName != null">#{lyrName},</if>
+            <if test="lyrUrl != null">#{lyrUrl},</if>
+            <if test="issuingDate != null">#{issuingDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLyric" parameterType="Lyric">
+        update lyric
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lyrName != null">lyr_name = #{lyrName},</if>
+            <if test="lyrUrl != null">lyr_url = #{lyrUrl},</if>
+            <if test="issuingDate != null">issuing_date = #{issuingDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where lyr_id = #{lyrId}
+    </update>
+
+    <delete id="deleteLyricById" parameterType="Long">
+        delete from lyric where lyr_id = #{lyrId}
+    </delete>
+
+    <delete id="deleteLyricByIds" parameterType="String">
+        delete from lyric where lyr_id in 
+        <foreach item="lyrId" collection="array" open="(" separator="," close=")">
+            #{lyrId}
+        </foreach>
+    </delete>
+    
+</mapper>

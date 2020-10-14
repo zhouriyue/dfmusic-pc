@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SingerMapper">
+    
+    <resultMap type="Singer" id="SingerResult">
+        <result property="sinId"    column="sin_id"    />
+        <result property="sinName"    column="sin_name"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="sex"    column="sex"    />
+        <result property="year"    column="year"    />
+        <result property="sinType"    column="sin_type"    />
+        <result property="area"    column="area"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="followerNumber"    column="follower_number"    />
+        <result property="albumNumber"    column="album_number"    />
+        <result property="mvNumber"    column="mv_number"    />
+        <result property="detail"    column="detail"    />
+        <result property="influencePower"    column="influence_power"    />
+        <result property="certInfo"    column="cert_info"    />
+        <result property="earlyExp"    column="early_exp"    />
+        <result property="performingExp"    column="performing_exp"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+    </resultMap>
+
+    <sql id="selectSingerVo">
+        select sin_id, sin_name, nickname, sex, year, sin_type, area, song_number, follower_number, album_number, mv_number, detail, influence_power, cert_info, early_exp, performing_exp, del_flag, create_time, update_time, del_time from singer
+    </sql>
+
+    <select id="selectSingerList" parameterType="Singer" resultMap="SingerResult">
+        <include refid="selectSingerVo"/>
+        <where>  
+            <if test="sinId != null "> and sin_id = #{sinId}</if>
+            <if test="sinName != null  and sinName != ''"> and sin_name like concat('%', #{sinName}, '%')</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="year != null "> and year = #{year}</if>
+            <if test="sinType != null "> and sin_type = #{sinType}</if>
+            <if test="followerNumber != null "> and follower_number = #{followerNumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectSingerById" parameterType="Long" resultMap="SingerResult">
+        <include refid="selectSingerVo"/>
+        where sin_id = #{sinId}
+    </select>
+        
+    <insert id="insertSinger" parameterType="Singer" useGeneratedKeys="true" keyProperty="sinId">
+        insert into singer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sinName != null">sin_name,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="sex != null">sex,</if>
+            <if test="year != null">year,</if>
+            <if test="sinType != null">sin_type,</if>
+            <if test="area != null">area,</if>
+            <if test="songNumber != null">song_number,</if>
+            <if test="followerNumber != null">follower_number,</if>
+            <if test="albumNumber != null">album_number,</if>
+            <if test="mvNumber != null">mv_number,</if>
+            <if test="detail != null">detail,</if>
+            <if test="influencePower != null">influence_power,</if>
+            <if test="certInfo != null">cert_info,</if>
+            <if test="earlyExp != null">early_exp,</if>
+            <if test="performingExp != null">performing_exp,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sinName != null">#{sinName},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="year != null">#{year},</if>
+            <if test="sinType != null">#{sinType},</if>
+            <if test="area != null">#{area},</if>
+            <if test="songNumber != null">#{songNumber},</if>
+            <if test="followerNumber != null">#{followerNumber},</if>
+            <if test="albumNumber != null">#{albumNumber},</if>
+            <if test="mvNumber != null">#{mvNumber},</if>
+            <if test="detail != null">#{detail},</if>
+            <if test="influencePower != null">#{influencePower},</if>
+            <if test="certInfo != null">#{certInfo},</if>
+            <if test="earlyExp != null">#{earlyExp},</if>
+            <if test="performingExp != null">#{performingExp},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSinger" parameterType="Singer">
+        update singer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sinName != null">sin_name = #{sinName},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="year != null">year = #{year},</if>
+            <if test="sinType != null">sin_type = #{sinType},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="songNumber != null">song_number = #{songNumber},</if>
+            <if test="followerNumber != null">follower_number = #{followerNumber},</if>
+            <if test="albumNumber != null">album_number = #{albumNumber},</if>
+            <if test="mvNumber != null">mv_number = #{mvNumber},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="influencePower != null">influence_power = #{influencePower},</if>
+            <if test="certInfo != null">cert_info = #{certInfo},</if>
+            <if test="earlyExp != null">early_exp = #{earlyExp},</if>
+            <if test="performingExp != null">performing_exp = #{performingExp},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+        </trim>
+        where sin_id = #{sinId}
+    </update>
+
+    <delete id="deleteSingerById" parameterType="Long">
+        delete from singer where sin_id = #{sinId}
+    </delete>
+
+    <delete id="deleteSingerByIds" parameterType="String">
+        delete from singer where sin_id in 
+        <foreach item="sinId" collection="array" open="(" separator="," close=")">
+            #{sinId}
+        </foreach>
+    </delete>
+    
+</mapper>

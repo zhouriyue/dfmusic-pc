@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.PrivilegeMapper">
+    
+    <resultMap type="Privilege" id="PrivilegeResult">
+        <result property="priId"    column="pri_id"    />
+        <result property="priName"    column="pri_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPrivilegeVo">
+        select pri_id, pri_name, create_time, update_time, del_time, del_flag from privilege
+    </sql>
+
+    <select id="selectPrivilegeList" parameterType="Privilege" resultMap="PrivilegeResult">
+        <include refid="selectPrivilegeVo"/>
+        <where>  
+            <if test="priId != null "> and pri_id = #{priId}</if>
+            <if test="priName != null  and priName != ''"> and pri_name like concat('%', #{priName}, '%')</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPrivilegeById" parameterType="Long" resultMap="PrivilegeResult">
+        <include refid="selectPrivilegeVo"/>
+        where pri_id = #{priId}
+    </select>
+        
+    <insert id="insertPrivilege" parameterType="Privilege" useGeneratedKeys="true" keyProperty="priId">
+        insert into privilege
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="priName != null">pri_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="priName != null">#{priName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePrivilege" parameterType="Privilege">
+        update privilege
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="priName != null">pri_name = #{priName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where pri_id = #{priId}
+    </update>
+
+    <delete id="deletePrivilegeById" parameterType="Long">
+        delete from privilege where pri_id = #{priId}
+    </delete>
+
+    <delete id="deletePrivilegeByIds" parameterType="String">
+        delete from privilege where pri_id in 
+        <foreach item="priId" collection="array" open="(" separator="," close=")">
+            #{priId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.CommentMapper">
+    
+    <resultMap type="Comment" id="CommentResult">
+        <result property="comId"    column="com_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="cType"    column="c_type"    />
+        <result property="songId"    column="song_id"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="content"    column="content"    />
+        <result property="likeNumber"    column="like_number"    />
+        <result property="beAnswerNumber"    column="be_answer_number"    />
+        <result property="beAnswer"    column="be_answer"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCommentVo">
+        select com_id, user_id, c_type, song_id, sl_id, content, like_number, be_answer_number, be_answer, create_time, update_time, del_time, del_flag from comment
+    </sql>
+
+    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        <where>  
+            <if test="comId != null "> and com_id = #{comId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="cType != null "> and c_type = #{cType}</if>
+            <if test="songId != null "> and song_id = #{songId}</if>
+            <if test="slId != null "> and sl_id = #{slId}</if>
+            <if test="beAnswer != null "> and be_answer = #{beAnswer}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCommentById" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where com_id = #{comId}
+    </select>
+        
+    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="comId">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="cType != null">c_type,</if>
+            <if test="songId != null">song_id,</if>
+            <if test="slId != null">sl_id,</if>
+            <if test="content != null">content,</if>
+            <if test="likeNumber != null">like_number,</if>
+            <if test="beAnswerNumber != null">be_answer_number,</if>
+            <if test="beAnswer != null">be_answer,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="cType != null">#{cType},</if>
+            <if test="songId != null">#{songId},</if>
+            <if test="slId != null">#{slId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="likeNumber != null">#{likeNumber},</if>
+            <if test="beAnswerNumber != null">#{beAnswerNumber},</if>
+            <if test="beAnswer != null">#{beAnswer},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComment" parameterType="Comment">
+        update comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="cType != null">c_type = #{cType},</if>
+            <if test="songId != null">song_id = #{songId},</if>
+            <if test="slId != null">sl_id = #{slId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="likeNumber != null">like_number = #{likeNumber},</if>
+            <if test="beAnswerNumber != null">be_answer_number = #{beAnswerNumber},</if>
+            <if test="beAnswer != null">be_answer = #{beAnswer},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where com_id = #{comId}
+    </update>
+
+    <delete id="deleteCommentById" parameterType="Long">
+        delete from comment where com_id = #{comId}
+    </delete>
+
+    <delete id="deleteCommentByIds" parameterType="String">
+        delete from comment where com_id in 
+        <foreach item="comId" collection="array" open="(" separator="," close=")">
+            #{comId}
+        </foreach>
+    </delete>
+    
+</mapper>

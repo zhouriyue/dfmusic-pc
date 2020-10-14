@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SongMapper">
+    
+    <resultMap type="Song" id="SongResult">
+        <result property="songId"    column="song_id"    />
+        <result property="songName"    column="song_name"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="duration"    column="duration"    />
+        <result property="issuingDate"    column="issuing_date"    />
+        <result property="mvUrl"    column="mv_url"    />
+        <result property="isCharge"    column="is_charge"    />
+        <result property="isCopyright"    column="is_copyright"    />
+        <result property="isSingle"    column="is_single"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="standardUrl"    column="standard_url"    />
+        <result property="hqUrl"    column="hq_url"    />
+        <result property="sqUrl"    column="sq_url"    />
+        <result property="witPreUrl"    column="wit_pre_url"    />
+        <result property="lyrId"    column="lyr_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSongVo">
+        select song_id, song_name, sin_id, duration, issuing_date, mv_url, is_charge, is_copyright, is_single, sl_id, standard_url, hq_url, sq_url, wit_pre_url, lyr_id, create_time, update_time, del_time, del_flag from song
+    </sql>
+
+    <select id="selectSongList" parameterType="Song" resultMap="SongResult">
+        <include refid="selectSongVo"/>
+        <where>  
+            <if test="songId != null "> and song_id = #{songId}</if>
+            <if test="songName != null  and songName != ''"> and song_name like concat('%', #{songName}, '%')</if>
+            <if test="sinId != null "> and sin_id = #{sinId}</if>
+            <if test="issuingDate != null "> and issuing_date = #{issuingDate}</if>
+            <if test="isCharge != null "> and is_charge = #{isCharge}</if>
+            <if test="isCopyright != null "> and is_copyright = #{isCopyright}</if>
+            <if test="isSingle != null "> and is_single = #{isSingle}</if>
+            <if test="slId != null "> and sl_id = #{slId}</if>
+            <if test="lyrId != null "> and lyr_id = #{lyrId}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSongById" parameterType="Long" resultMap="SongResult">
+        <include refid="selectSongVo"/>
+        where song_id = #{songId}
+    </select>
+        
+    <insert id="insertSong" parameterType="Song" useGeneratedKeys="true" keyProperty="songId">
+        insert into song
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="songName != null">song_name,</if>
+            <if test="sinId != null">sin_id,</if>
+            <if test="duration != null">duration,</if>
+            <if test="issuingDate != null">issuing_date,</if>
+            <if test="mvUrl != null">mv_url,</if>
+            <if test="isCharge != null">is_charge,</if>
+            <if test="isCopyright != null">is_copyright,</if>
+            <if test="isSingle != null">is_single,</if>
+            <if test="slId != null">sl_id,</if>
+            <if test="standardUrl != null">standard_url,</if>
+            <if test="hqUrl != null">hq_url,</if>
+            <if test="sqUrl != null">sq_url,</if>
+            <if test="witPreUrl != null">wit_pre_url,</if>
+            <if test="lyrId != null">lyr_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="songName != null">#{songName},</if>
+            <if test="sinId != null">#{sinId},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="issuingDate != null">#{issuingDate},</if>
+            <if test="mvUrl != null">#{mvUrl},</if>
+            <if test="isCharge != null">#{isCharge},</if>
+            <if test="isCopyright != null">#{isCopyright},</if>
+            <if test="isSingle != null">#{isSingle},</if>
+            <if test="slId != null">#{slId},</if>
+            <if test="standardUrl != null">#{standardUrl},</if>
+            <if test="hqUrl != null">#{hqUrl},</if>
+            <if test="sqUrl != null">#{sqUrl},</if>
+            <if test="witPreUrl != null">#{witPreUrl},</if>
+            <if test="lyrId != null">#{lyrId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSong" parameterType="Song">
+        update song
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="songName != null">song_name = #{songName},</if>
+            <if test="sinId != null">sin_id = #{sinId},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="issuingDate != null">issuing_date = #{issuingDate},</if>
+            <if test="mvUrl != null">mv_url = #{mvUrl},</if>
+            <if test="isCharge != null">is_charge = #{isCharge},</if>
+            <if test="isCopyright != null">is_copyright = #{isCopyright},</if>
+            <if test="isSingle != null">is_single = #{isSingle},</if>
+            <if test="slId != null">sl_id = #{slId},</if>
+            <if test="standardUrl != null">standard_url = #{standardUrl},</if>
+            <if test="hqUrl != null">hq_url = #{hqUrl},</if>
+            <if test="sqUrl != null">sq_url = #{sqUrl},</if>
+            <if test="witPreUrl != null">wit_pre_url = #{witPreUrl},</if>
+            <if test="lyrId != null">lyr_id = #{lyrId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where song_id = #{songId}
+    </update>
+
+    <delete id="deleteSongById" parameterType="Long">
+        delete from song where song_id = #{songId}
+    </delete>
+
+    <delete id="deleteSongByIds" parameterType="String">
+        delete from song where song_id in 
+        <foreach item="songId" collection="array" open="(" separator="," close=")">
+            #{songId}
+        </foreach>
+    </delete>
+    
+</mapper>

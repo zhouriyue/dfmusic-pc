@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.MemberMapper">
+    
+    <resultMap type="Member" id="MemberResult">
+        <result property="mId"    column="m_id"    />
+        <result property="mGrade"    column="m_grade"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectMemberVo">
+        select m_id, m_grade, user_id, create_time, update_time, del_time, del_flag from member
+    </sql>
+
+    <select id="selectMemberList" parameterType="Member" resultMap="MemberResult">
+        <include refid="selectMemberVo"/>
+        <where>  
+            <if test="mGrade != null "> and m_grade = #{mGrade}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateTime != null  and updateTime != ''"> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMemberById" parameterType="Long" resultMap="MemberResult">
+        <include refid="selectMemberVo"/>
+        where m_id = #{mId}
+    </select>
+        
+    <insert id="insertMember" parameterType="Member" useGeneratedKeys="true" keyProperty="mId">
+        insert into member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mGrade != null">m_grade,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mGrade != null">#{mGrade},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMember" parameterType="Member">
+        update member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mGrade != null">m_grade = #{mGrade},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <delete id="deleteMemberById" parameterType="Long">
+        delete from member where m_id = #{mId}
+    </delete>
+
+    <delete id="deleteMemberByIds" parameterType="String">
+        delete from member where m_id in 
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+    
+</mapper>
