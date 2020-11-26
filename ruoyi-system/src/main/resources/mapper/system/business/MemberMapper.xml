@@ -6,47 +6,103 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Member" id="MemberResult">
         <result property="mId"    column="m_id"    />
+        <result property="validDay"    column="valid_day"    />
         <result property="mGrade"    column="m_grade"    />
         <result property="userId"    column="user_id"    />
+        <result property="enrollDate"    column="enroll_date"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="delTime"    column="del_time"    />
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
+    <resultMap type="Member" id="MemberDetailResult">
+        <result property="mId"    column="m_id"    />
+        <result property="validDay"    column="valid_day"    />
+        <result property="mGrade"    column="m_grade"    />
+        <result property="userId"    column="user_id"    />
+        <result property="enrollDate"    column="enroll_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <association property="sysUser"    column="user_id" javaType="SysUser" resultMap="SysUserResult" />
+        <association property="userDetailVo"    column="user_id" javaType="UserDetailVo" resultMap="UserDetailVoResult" />
+    </resultMap>
+
+    <resultMap type="UserDetailVo" id="UserDetailVoResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="email"        column="email"        />
+        <result property="birthday"   column="birthday"  />
+        <result property="address"   column="address"  />
+        <result property="perBg"   column="per_bg"  />
+        <result property="isMember"   column="is_member"  />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+    </resultMap>
+
     <sql id="selectMemberVo">
-        select m_id, m_grade, user_id, create_time, update_time, del_time, del_flag from member
+        select m.m_id,m.valid_day,m.m_grade, m.user_id, m.create_time, m.update_time,
+        m.del_time, m.del_flag,ud.detail,ud.birthday,ud.address,ud.per_bg,ud.is_member,
+        u.user_name,u.nick_name,u.email,u.phonenumber,u.sex,u.avatar
+        from member m
+             left join user_detail ud on ud.user_id = m.user_id
+             left join sys_user u on u.user_id = m.user_id
     </sql>
 
-    <select id="selectMemberList" parameterType="Member" resultMap="MemberResult">
+    <select id="selectMemberList" parameterType="Member" resultMap="MemberDetailResult">
         <include refid="selectMemberVo"/>
         <where>  
             <if test="mGrade != null "> and m_grade = #{mGrade}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="userName != null "> and u.user_name like concat('%', #{userName}, '%')</if>
+            <if test="createTime != null "> and year(create_time) = year(#{createTime}) and month(create_time) = month(#{createTime}) and day(create_time) = day(#{createTime})</if>
             <if test="updateTime != null  and updateTime != ''"> and update_time = #{updateTime}</if>
         </where>
     </select>
     
-    <select id="selectMemberById" parameterType="Long" resultMap="MemberResult">
+    <select id="selectMemberById" parameterType="Long" resultMap="MemberDetailResult">
         <include refid="selectMemberVo"/>
         where m_id = #{mId}
     </select>
-        
+
     <insert id="insertMember" parameterType="Member" useGeneratedKeys="true" keyProperty="mId">
         insert into member
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="mGrade != null">m_grade,</if>
+            <if test="validDay != null">valid_day,</if>
+            enroll_date,
             <if test="userId != null">user_id,</if>
-            <if test="createTime != null">create_time,</if>
+            create_time,
             <if test="updateTime != null">update_time,</if>
             <if test="delTime != null">del_time,</if>
             <if test="delFlag != null">del_flag,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mGrade != null">#{mGrade},</if>
+            <if test="validDay != null">#{validDay},</if>
+            sysdate(),
             <if test="userId != null">#{userId},</if>
-            <if test="createTime != null">#{createTime},</if>
+            sysdate(),
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delTime != null">#{delTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -62,6 +118,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delTime != null">del_time = #{delTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <update id="updateValidDay">
+        update member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="validDay != null">valid_day = #{validDay},</if>
+        </trim>
+        where m_id = #{mId}
+    </update>
+
+    <update id="recharge">
+        update member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rechargeDay != null">valid_day = valid_day+#{rechargeDay},</if>
         </trim>
         where m_id = #{mId}
     </update>

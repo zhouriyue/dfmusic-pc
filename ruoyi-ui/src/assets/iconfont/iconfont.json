@@ -1,0 +1,16 @@
+{
+  "id": "2189218",
+  "name": "ruoyi",
+  "font_family": "font_family",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "18103991",
+      "name": "添加",
+      "font_class": "tianjia",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    }
+  ]
+}

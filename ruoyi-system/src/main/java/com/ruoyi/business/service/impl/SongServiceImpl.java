@@ -2,8 +2,10 @@ package com.ruoyi.business.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.business.domain.Singer;
 import com.ruoyi.business.domain.Song;
 import com.ruoyi.business.mapper.SongMapper;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,5 +95,40 @@ public class SongServiceImpl implements ISongService
     public int deleteSongById(Long songId)
     {
         return songMapper.deleteSongById(songId);
+    }
+
+    @Override
+    public List<Song> selectSongKey(String wordKey) {
+        return songMapper.selectSongKey(wordKey);
+    }
+
+    @Override
+    public List<Song> selectAll(Long slId) {
+        return songMapper.selectAll(slId);
+    }
+
+    @Override
+    public List<Singer> selectSinger(Long songId) {
+        return songMapper.selectSinger(songId);
+    }
+
+    @Override
+    public List<Song> getRiseSong() {
+        return songMapper.getRiseSong();
+    }
+
+    @Override
+    public List<Song> getNewSong() {
+        return songMapper.getNewSong();
+    }
+
+    @Override
+    public List<Song> getOriginalSong() {
+        return songMapper.getOriginalSong();
+    }
+
+    @Override
+    public List<Song> getHotSong() {
+        return songMapper.getHotSong();
     }
 }

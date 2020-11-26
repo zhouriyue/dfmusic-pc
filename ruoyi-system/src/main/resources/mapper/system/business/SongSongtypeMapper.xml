@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SongSongtypeMapper">
+    
+    <resultMap type="SongSongtype" id="SongSongtypeResult">
+        <result property="id"    column="id"    />
+        <result property="songId"    column="song_id"    />
+        <result property="stId"    column="st_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+    </resultMap>
+
+    <sql id="selectSongSongtypeVo">
+        select id, song_id, st_id, del_flag, create_time, update_time, del_time from song_songtype
+    </sql>
+
+    <select id="selectSongSongtypeList" parameterType="SongSongtype" resultMap="SongSongtypeResult">
+        <include refid="selectSongSongtypeVo"/>
+        <where>  
+            <if test="songId != null "> and song_id = #{songId}</if>
+            <if test="stId != null "> and st_id = #{stId}</if>
+            <if test="delTime != null "> and del_time = #{delTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSongSongtypeById" parameterType="Long" resultMap="SongSongtypeResult">
+        <include refid="selectSongSongtypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSongSongtype" parameterType="SongSongtype" useGeneratedKeys="true" keyProperty="id">
+        insert into song_songtype
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="songId != null">song_id,</if>
+            <if test="stId != null">st_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="songId != null">#{songId},</if>
+            <if test="stId != null">#{stId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSongSongtype" parameterType="SongSongtype">
+        update song_songtype
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="songId != null">song_id = #{songId},</if>
+            <if test="stId != null">st_id = #{stId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSongSongtypeById" parameterType="Long">
+        delete from song_songtype where id = #{id}
+    </delete>
+
+    <delete id="deleteSongIdStId" parameterType="SongSongtype">
+        delete from song_songtype where st_id = #{stId} and song_id = #{songId}
+    </delete>
+
+    <delete id="deleteSongSongtypeByIds" parameterType="String">
+        delete from song_songtype where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

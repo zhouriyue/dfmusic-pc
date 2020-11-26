@@ -93,4 +93,9 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
         }
         return sysUserOnline;
     }
+
+    @Override
+    public Long getOnlineNumber(String ipaddr, String userName) {
+        return null;
+    }
 }

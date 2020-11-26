@@ -26,6 +26,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
 	</resultMap>
+
+	<resultMap type="UserDetailVo" id="UserDetailVoResult">
+		<id     property="userId"       column="user_id"      />
+		<result property="userName"     column="user_name"    />
+		<result property="nickName"     column="nick_name"    />
+		<result property="email"        column="email"        />
+		<result property="phonenumber"  column="phonenumber"  />
+		<result property="sex"          column="sex"          />
+		<result property="avatar"       column="avatar"       />
+		<result property="detail"   column="detail"  />
+		<result property="birthday"   column="birthday"  />
+		<result property="address"   column="address"  />
+		<result property="perBg"   column="per_bg"  />
+		<result property="isMember"   column="is_member"  />
+		<result property="createTime"   column="create_time"  />
+		<result property="mId"    column="m_id"    />
+		<result property="validDay"    column="valid_day"    />
+		<result property="mGrade"    column="m_grade"    />
+		<result property="userId"    column="user_id"    />
+		<result property="enrollDate"    column="enroll_date"    />
+	</resultMap>
 	
 	<resultMap id="deptResult" type="SysDept">
 		<id     property="deptId"   column="dept_id"     />
@@ -45,8 +66,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="status"       column="role_status"    />
 	</resultMap>
 	
+	<sql id="selectUserDetailVo">
+        select u.user_id, u.user_name, u.nick_name, u.email,
+         u.avatar, u.phonenumber, u.sex, u.create_time,ud.detail,ud.birthday,
+         ud.address,ud.per_bg,ud.is_member,m.m_id,m.valid_day,m.m_grade,m.enroll_date
+        from sys_user u
+            left join user_detail ud on ud.user_id = u.user_id
+            left join member m on m.user_id = u.user_id
+    </sql>
+
 	<sql id="selectUserVo">
-        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, 
+        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
         d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
         r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
         from sys_user u
@@ -102,7 +132,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">
 		select user_id, email from sys_user where email = #{email} limit 1
 	</select>
-	
+
+	<select id="getUserDetail" parameterType="SysUser" resultMap="UserDetailVoResult">
+		<include refid="selectUserDetailVo"/>
+		where u.user_id = #{userId}
+	</select>
+
+	<select id="getTotalNumber" resultType="Long">
+		select COUNT(*)
+		from sys_user
+	</select>
+
 	<insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
  		insert into sys_user(
  			<if test="userId != null and userId != 0">user_id,</if>
@@ -133,6 +173,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="remark != null and remark != ''">#{remark},</if>
  			sysdate()
  		)
+	</insert>
+
+	<insert id="insertUserDetail" parameterType="userDetailVo">
+		insert into user_detail(
+		<if test="userId != null and userId != 0">user_id</if>
+		)values(
+		<if test="userId != null and userId != ''">#{userId}</if>
+		)
 	</insert>
 	
 	<update id="updateUser" parameterType="SysUser">
@@ -166,6 +214,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<update id="resetUserPwd" parameterType="SysUser">
  		update sys_user set password = #{password} where user_name = #{userName}
+	</update>
+
+	<update id="userChangeMember" parameterType="Long">
+ 		update user_detail set is_member = 1 where user_id = #{userId}
 	</update>
 	
 	<delete id="deleteUserById" parameterType="Long">

@@ -1,19 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="歌单类型编号" prop="sltId">
-        <el-input
-          v-model="queryParams.sltId"
-          placeholder="请输入歌单类型编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="歌单名称" prop="sltName">
+      <el-form-item label="歌单类名" prop="sltName">
         <el-input
           v-model="queryParams.sltName"
-          placeholder="请输入歌单名称"
+          placeholder="请输入歌单类名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -25,14 +16,6 @@
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="更新时间" prop="updateTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.updateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择更新时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -92,11 +75,6 @@
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -116,7 +94,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

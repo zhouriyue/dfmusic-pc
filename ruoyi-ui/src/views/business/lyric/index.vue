@@ -10,39 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="歌词名" prop="lyrName">
-        <el-input
-          v-model="queryParams.lyrName"
-          placeholder="请输入歌词名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发行时间" prop="issuingDate">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.issuingDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择发行时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.createTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="更新时间" prop="updateTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.updateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择更新时间">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -91,19 +58,19 @@
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
+    <!--列表显示-->
     <el-table v-loading="loading" :data="lyricList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="歌词id" align="center" prop="lyrId" />
       <el-table-column label="歌词名" align="center" prop="lyrName" />
-      <el-table-column label="文件地址" align="center" prop="lyrUrl" />
+      <el-table-column label="文件地址" align="center" prop="lyrUrl">
+        <template slot-scope="scope">
+          <span style="font-size: 10px;">{{scope.row.lyrUrl}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="发行时间" align="center" prop="issuingDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.issuingDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
@@ -130,7 +97,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -145,8 +112,14 @@
         <el-form-item label="歌词名" prop="lyrName">
           <el-input v-model="form.lyrName" placeholder="请输入歌词名" />
         </el-form-item>
-        <el-form-item label="文件地址" prop="lyrUrl">
-          <el-input v-model="form.lyrUrl" placeholder="请输入文件地址" />
+        <el-form-item label="文件地址" prop="lyrUrl" required>
+          <el-upload ref="lyrFile"
+                     :limit="1"
+                     :file-list="lyrFile"
+                     :action="UploadAction"
+                     :on-success="uploadLyrSuccess">
+            <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
+          </el-upload>
         </el-form-item>
         <el-form-item label="发行时间" prop="issuingDate">
           <el-date-picker clearable size="small" style="width: 200px"
@@ -172,6 +145,10 @@ export default {
   name: "Lyric",
   data() {
     return {
+      //上传文件路径
+      UploadAction:'http://127.0.0.1:8080/upload/img',
+      //上传歌词文件
+      lyrFile:[],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -211,6 +188,11 @@ export default {
     this.getList();
   },
   methods: {
+    //上传成功执行方法
+    uploadLyrSuccess(res){
+      this.form.lyrUrl = res
+      alert(res)
+    },
     /** 查询歌词列表 */
     getList() {
       this.loading = true;

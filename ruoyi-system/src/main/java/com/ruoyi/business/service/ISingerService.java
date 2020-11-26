@@ -1,6 +1,8 @@
 package com.ruoyi.business.service;
 
 import com.ruoyi.business.domain.Singer;
+import com.ruoyi.business.domain.Songlist;
+import com.ruoyi.common.core.domain.AjaxResult;
 
 import java.util.List;
 
@@ -59,4 +61,18 @@ public interface ISingerService
      * @return 结果
      */
     public int deleteSingerById(Long sinId);
+
+    public List<Singer> selectSingerKey(String key);
+
+    /** 获取歌手排名 **/
+    public List<Singer> selectSingerRank();
+
+    /** 获取全部歌手排名 **/
+    public List<Singer> selectRankAll();
+
+    public Singer selectSingerDetail(Long sinId);
+
+    public List<Songlist> selectSingerAlbum(Long sinId);
+
+    public List<Singer> selectFristPySinName(String fristPy);
 }

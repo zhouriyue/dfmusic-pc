@@ -55,3 +55,7 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+
+common:
+    fdfs-save-server: http://47.114.190.44/
+    groups: ["group1"]

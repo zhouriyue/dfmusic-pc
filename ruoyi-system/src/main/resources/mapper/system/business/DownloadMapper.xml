@@ -14,19 +14,76 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="delTime"    column="del_time"    />
         <result property="delFlag"    column="del_flag"    />
+        <association property="sysUser"    column="user_id" javaType="SysUser" resultMap="SysUserResult" />
+        <association  property="song"  column="song_id" resultMap="SongResult"/>
+    </resultMap>
+
+    <resultMap type="Song" id="SongResult">
+        <result property="songId"    column="song_id"    />
+        <result property="songName"    column="song_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="duration"    column="duration"    />
+        <result property="issuingDate"    column="issuing_date"    />
+        <result property="mvUrl"    column="mv_url"    />
+        <result property="isCharge"    column="is_charge"    />
+        <result property="isCopyright"    column="is_copyright"    />
+        <result property="isSingle"    column="is_single"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="standardUrl"    column="standard_url"    />
+        <result property="hqUrl"    column="hq_url"    />
+        <result property="sqUrl"    column="sq_url"    />
+        <result property="witPreUrl"    column="wit_pre_url"    />
+        <result property="lyrId"    column="lyr_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="todayPlay"    column="today_play"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="isOriginal"    column="is_original"    />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
     </resultMap>
 
     <sql id="selectDownloadVo">
-        select dl_id, user_id, song_id, tone_quality, dl_lenght, create_time, update_time, del_time, del_flag from download
+        select
+        dl.dl_id, dl.user_id, dl.song_id, dl.tone_quality, dl.dl_lenght, dl.create_time, dl.update_time, dl.del_time, dl.del_flag,
+        s.song_id, s.song_name,s.cover_picture,s.duration, s.issuing_date,
+        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.sl_id, s.standard_url, s.hq_url,
+        s.sq_url, s.wit_pre_url, s.lyr_id,
+        s.today_play,s.play_number,s.is_original,s.lyr_url,
+        u.user_id, u.user_name, u.nick_name, u.email,
+        u.avatar, u.phonenumber, u.sex
+        from download dl
+             left join song s on s.song_id = dl.song_id
+             left join sys_user u on u.user_id = dl.user_id
     </sql>
 
     <select id="selectDownloadList" parameterType="Download" resultMap="DownloadResult">
         <include refid="selectDownloadVo"/>
-        <where>  
-            <if test="dlId != null "> and dl_id = #{dlId}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="songId != null "> and song_id = #{songId}</if>
-            <if test="toneQuality != null  and toneQuality != ''"> and tone_quality = #{toneQuality}</if>
+        <where>
+            <if test="toneQuality != null "> and u.user_name like concat('%', #{toneQuality}, '%') or s.song_name like concat('%', #{toneQuality}, '%')</if>
+            <if test="createTime != null "> and  year(dl.create_time) = year(#{createTime}) and  month(dl.create_time) = month(#{createTime}) and  day(dl.create_time) = day(#{createTime}) </if>
         </where>
     </select>
     
@@ -52,7 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="songId != null">#{songId},</if>
             <if test="toneQuality != null">#{toneQuality},</if>
             <if test="dlLenght != null">#{dlLenght},</if>
-            <if test="createTime != null">#{createTime},</if>
+            sysdate(),
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delTime != null">#{delTime},</if>
             <if test="delFlag != null">#{delFlag},</if>

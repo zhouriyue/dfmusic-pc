@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SetMealMapper">
+    
+    <resultMap type="SetMeal" id="SetMealResult">
+        <result property="smId"    column="sm_id"    />
+        <result property="smName"    column="sm_name"    />
+        <result property="currentPrices"    column="current_prices"    />
+        <result property="costPrice"    column="cost_price"    />
+        <result property="rechargeDay"    column="recharge_day"    />
+        <result property="smType"    column="sm_type"    />
+        <result property="detail"    column="detail"    />
+        <result property="isSeries"    column="is_series"    />
+    </resultMap>
+
+    <sql id="selectSetMealVo">
+        select sm_id, sm_name, current_prices, cost_price, recharge_day, sm_type, detail,is_series from set_meal
+    </sql>
+
+    <select id="selectSetMealList" parameterType="SetMeal" resultMap="SetMealResult">
+        <include refid="selectSetMealVo"/>
+        <where>  
+            <if test="smName != null  and smName != ''"> and sm_name like concat('%', #{smName}, '%')</if>
+            <if test="smType != null "> and sm_type = #{smType}</if>
+        </where>
+    </select>
+    
+    <select id="selectSetMealById" parameterType="Long" resultMap="SetMealResult">
+        <include refid="selectSetMealVo"/>
+        where sm_id = #{smId}
+    </select>
+        
+    <insert id="insertSetMeal" parameterType="SetMeal" useGeneratedKeys="true" keyProperty="smId">
+        insert into set_meal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="smName != null">sm_name,</if>
+            <if test="currentPrices != null">current_prices,</if>
+            <if test="costPrice != null">cost_price,</if>
+            <if test="rechargeDay != null">recharge_day,</if>
+            <if test="smType != null">sm_type,</if>
+            <if test="detail != null">detail,</if>
+            <if test="isSeries != null">is_series,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="smName != null">#{smName},</if>
+            <if test="currentPrices != null">#{currentPrices},</if>
+            <if test="costPrice != null">#{costPrice},</if>
+            <if test="rechargeMonth != null">#{rechargeMonth},</if>
+            <if test="smType != null">#{smType},</if>
+            <if test="isSeries != null">#{isSeries},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSetMeal" parameterType="SetMeal">
+        update set_meal
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="smName != null">sm_name = #{smName},</if>
+            <if test="currentPrices != null">current_prices = #{currentPrices},</if>
+            <if test="costPrice != null">cost_price = #{costPrice},</if>
+            <if test="rechargeDay != null">recharge_day = #{rechargeDay},</if>
+            <if test="smType != null">sm_type = #{smType},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="isSeries != null">is_series = #{isSeries},</if>
+        </trim>
+        where sm_id = #{smId}
+    </update>
+
+    <delete id="deleteSetMealById" parameterType="Long">
+        delete from set_meal where sm_id = #{smId}
+    </delete>
+
+    <delete id="deleteSetMealByIds" parameterType="String">
+        delete from set_meal where sm_id in 
+        <foreach item="smId" collection="array" open="(" separator="," close=")">
+            #{smId}
+        </foreach>
+    </delete>
+    
+</mapper>

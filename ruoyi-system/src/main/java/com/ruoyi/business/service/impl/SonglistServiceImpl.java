@@ -1,9 +1,14 @@
 package com.ruoyi.business.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.business.domain.Song;
+import com.ruoyi.business.domain.SongSonglist;
 import com.ruoyi.business.domain.Songlist;
+import com.ruoyi.business.domain.vo.SonglistdetailVo;
 import com.ruoyi.business.mapper.SonglistMapper;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,5 +98,59 @@ public class SonglistServiceImpl implements ISonglistService
     public int deleteSonglistById(Long slId)
     {
         return songlistMapper.deleteSonglistById(slId);
+    }
+
+    @Override
+    public int deleteSonglisSong(Long slId) {
+        return 0;
+    }
+
+    @Override
+    public List<Song> selectSongList(Long slId) {
+        return songlistMapper.selectSongList(slId);
+    }
+
+    @Override
+    public int addToSonglist(Long slId, Long songId) {
+        return songlistMapper.addToSonglist(slId,songId);
+    }
+
+    @Override
+    public SongSonglist selectSonglistSong(Long slId, Long songId) {
+        return songlistMapper.selectSonglistSong(slId,songId);
+    }
+
+    @Override
+    public List<Song> getIndexSong(Integer slId) {
+        return songlistMapper.getIndexSong(slId);
+    }
+
+    @Override
+    public List<SonglistdetailVo> getSonglistDetail(Songlist songlist) {
+        return songlistMapper.getSonglistDetail(songlist);
+    }
+
+    @Override
+    public long deleteSonglistSong(Long slId, Long songId) {
+        return songlistMapper.deleteSonglistSong(slId,songId);
+    }
+
+    public List<Song> selectSongDetail(Long slId){
+        return songlistMapper.selectSongDetail(slId);
+    }
+
+    @Override
+    public SysUser selectUserSonglist(Long slId) {
+        return songlistMapper.selectUserSonglist(slId);
+    }
+
+    @Override
+    public List<Songlist> searchSonglist(String wordKey, Date createTime, Integer isAlbum) {
+        return songlistMapper.searchSonglist(wordKey,createTime,isAlbum);
+    }
+
+    @Override
+    public Long addSongToSl(Long slId,Integer isAlbum, Long[] songIds) {
+        return songlistMapper.addSongToSl(slId,isAlbum,songIds);
     }
 }

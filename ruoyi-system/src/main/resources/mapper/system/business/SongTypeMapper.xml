@@ -13,8 +13,98 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
+    <resultMap type="Song" id="SongResult">
+        <result property="songId"    column="song_id"    />
+        <result property="songName"    column="song_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="duration"    column="duration"    />
+        <result property="issuingDate"    column="issuing_date"    />
+        <result property="mvUrl"    column="mv_url"    />
+        <result property="isCharge"    column="is_charge"    />
+        <result property="isCopyright"    column="is_copyright"    />
+        <result property="isSingle"    column="is_single"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="standardUrl"    column="standard_url"    />
+        <result property="hqUrl"    column="hq_url"    />
+        <result property="sqUrl"    column="sq_url"    />
+        <result property="witPreUrl"    column="wit_pre_url"    />
+        <result property="lyrId"    column="lyr_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="todayPlay"    column="today_play"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="isOriginal"    column="is_original"    />
+        <association property="songlistes"    column="sl_id" javaType="songlist" resultMap="SonglistResult" />
+        <collection  property="singerList"   javaType="java.util.List" resultMap="SingerResult"/>
+    </resultMap>
+
+    <resultMap type="Songlist" id="SonglistResult">
+        <result property="slId"    column="sl_id"    />
+        <result property="slName"    column="sl_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="slTitle"    column="sl_title"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="colNumber"    column="col_number"    />
+        <result property="commentsNumber"    column="comments_number"    />
+        <result property="shareNumber"    column="share_number"    />
+        <result property="createById"    column="create_by_id"    />
+        <result property="detail"    column="detail"    />
+        <result property="isAlbum"    column="is_album"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="isPublic"    column="is_public"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="Singer" id="SingerResult">
+        <result property="sinId"    column="sin_id"    />
+        <result property="sinName"    column="sin_name"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="sex"    column="sex"    />
+        <result property="year"    column="year"    />
+        <result property="sinType"    column="sin_type"    />
+        <result property="area"    column="area"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="followerNumber"    column="follower_number"    />
+        <result property="albumNumber"    column="album_number"    />
+        <result property="mvNumber"    column="mv_number"    />
+        <result property="detail"    column="detail"    />
+        <result property="influencePower"    column="influence_power"    />
+        <result property="certInfo"    column="cert_info"    />
+        <result property="earlyExp"    column="early_exp"    />
+        <result property="performingExp"    column="performing_exp"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+    </resultMap>
+
     <sql id="selectSongTypeVo">
         select st_id, st_name, create_time, update_time, del_time, del_flag from song_type
+    </sql>
+
+    <!--获取排行榜的歌曲，信息包含歌手、专辑、类型-->
+    <sql id="selectTypeSong">
+        select s.song_id, s.song_name,s.cover_picture, s.duration, s.issuing_date,
+        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.sl_id, s.standard_url, s.hq_url,
+        s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time, s.del_flag,
+        s.today_play,s.play_number,s.is_original,
+        sr.sin_id, sr.sin_name, sr.nickname, sr.sex, sr.year, sr.sin_type, sr.area,
+        sr.song_number, sr.follower_number, sr.album_number, sr.mv_number,sr.human_qi,
+        sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,
+        sr.cur_rank,sr.last_rank,sr.picture,sl.sl_name
+        from song s
+              left join song_singer ssr on ssr.song_id=s.song_id
+              left join singer sr on ssr.sin_id=sr.sin_id
+              left join song_songlist ssli on ssli.song_id=s.song_id
+              left join songlist sl on sl.sl_id=ssli.sl_id
+              left join song_songtype sst on s.song_id = sst.song_id
     </sql>
 
     <select id="selectSongTypeList" parameterType="SongType" resultMap="SongTypeResult">
@@ -22,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="stId != null "> and st_id = #{stId}</if>
             <if test="stName != null  and stName != ''"> and st_name like concat('%', #{stName}, '%')</if>
-            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="createTime != null "> and year(create_time) = year(#{createTime}) and month(create_time) = month(#{createTime}) and day(create_time) = day(#{createTime})</if>
             <if test="updateTime != null "> and update_time = #{updateTime}</if>
         </where>
     </select>
@@ -31,7 +121,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSongTypeVo"/>
         where st_id = #{stId}
     </select>
-        
+
+    <select id="getTypeSong" parameterType="Long" resultMap="SongResult">
+        <include refid="selectTypeSong"/>
+        <where>
+            <if test="stId != null and stId!=0">sst.st_id = #{stId}</if>
+        </where>
+        GROUP BY s.song_id
+    </select>
+
     <insert id="insertSongType" parameterType="SongType" useGeneratedKeys="true" keyProperty="stId">
         insert into song_type
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="font_family" horiz-adv-x="1024" >
+  <font-face
+    font-family="font_family"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="tianjia" unicode="&#58882;" d="M279.273 11.636h279.272c0 16.059 2.048 31.651 5.865 46.546H279.273v-46.546z m512-139.636v93.09h93.09v93.092h-93.09v93.09h-93.091v-93.09H605.09v-93.091h93.09V-128z m-46.546 325.818H279.273v-46.545h342.295c32.815 28.951 75.962 46.545 123.16 46.545z m-465.454 418.91h465.454v-46.546H279.273v46.545z m0-279.273h465.454v-46.546H279.273v46.546zM884.363 691.2L681.24 896H162.211s-22.575 0-22.575-22.76v-978.433c0-22.807 22.575-22.807 22.575-22.807h459.357a187.66 187.66 0 0 0-38.12 46.545H186.181V849.455h465.454v-139.637c0-46.545 46.546-46.545 46.546-46.545h139.636v-490.357a187.66 187.66 0 0 0 46.546-38.12V691.2z m-605.09 65.164h279.272v-46.546H279.273v46.546z m0-279.273h465.454v-46.546H279.273v46.546z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SongSingerMapper">
+    
+    <resultMap type="SongSinger" id="SongSingerResult">
+        <result property="id"    column="id"    />
+        <result property="songId"    column="song_id"    />
+        <result property="sinId"    column="sin_id"    />
+    </resultMap>
+
+    <sql id="selectSongSingerVo">
+        select id, song_id, sin_id from song_singer
+    </sql>
+
+    <select id="selectSongSingerList" parameterType="SongSinger" resultMap="SongSingerResult">
+        <include refid="selectSongSingerVo"/>
+        <where>  
+            <if test="songId != null "> and song_id = #{songId}</if>
+            <if test="sinId != null "> and sin_id = #{sinId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSongSingerById" parameterType="Long" resultMap="SongSingerResult">
+        <include refid="selectSongSingerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSongSinger" parameterType="SongSinger" useGeneratedKeys="true" keyProperty="id">
+        insert into song_singer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="songId != null">song_id,</if>
+            <if test="sinId != null">sin_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="songId != null">#{songId},</if>
+            <if test="sinId != null">#{sinId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSongSinger" parameterType="SongSinger">
+        update song_singer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="songId != null">song_id = #{songId},</if>
+            <if test="sinId != null">sin_id = #{sinId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSongSingerById" parameterType="Long">
+        delete from song_singer where id = #{id}
+    </delete>
+
+    <delete id="deleteIdSlId">
+        delete from song_singer where song_id = #{songId} and sin_id = #{sinId}
+    </delete>
+
+    <delete id="deleteSongSingerByIds" parameterType="String">
+        delete from song_singer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

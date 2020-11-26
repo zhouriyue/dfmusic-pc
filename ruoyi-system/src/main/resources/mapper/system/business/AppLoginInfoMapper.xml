@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.AppLoginInfoMapper">
+
+    <resultMap type="AppLoginInfo" id="AppLoginInfoResult">
+        <result property="loId" column="lo_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="loginLocation" column="login_location"/>
+        <result property="os" column="os"/>
+        <result property="status" column="status"/>
+        <result property="msg" column="msg"/>
+        <result property="loginTime" column="login_time"/>
+    </resultMap>
+
+    <sql id="selectAppLoginInfoVo">
+        select lo_id, user_id, login_location, os, status, msg, login_time from app_login_info
+    </sql>
+
+    <select id="selectAppLoginInfoList" parameterType="AppLoginInfo" resultMap="AppLoginInfoResult">
+        <include refid="selectAppLoginInfoVo"/>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <select id="selectAppLoginInfoById" resultMap="AppLoginInfoResult">
+        <include refid="selectAppLoginInfoVo"/>
+        where lo_id = #{loId}
+    </select>
+
+    <select id="getTodayActivityNumber" resultType="Long">
+        select count(DISTINCT user_id)
+        from app_login_info
+        where year(login_time) = year(now())
+             and month(login_time) = month(now())
+             and day(login_time) = day(now())
+    </select>
+
+    <insert id="insertAppLoginInfo" parameterType="AppLoginInfo" useGeneratedKeys="true" keyProperty="loId">
+        insert into app_login_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="loginLocation != null">login_location,</if>
+            <if test="os != null">os,</if>
+            <if test="status != null">status,</if>
+            <if test="msg != null">msg,</if>
+            <if test="loginTime != null">login_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="loginLocation != null">#{loginLocation},</if>
+            <if test="os != null">#{os},</if>
+            <if test="status != null">#{status},</if>
+            <if test="msg != null">#{msg},</if>
+            <if test="loginTime != null">#{loginTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAppLoginInfo" parameterType="AppLoginInfo">
+        update app_login_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="loginLocation != null">login_location = #{loginLocation},</if>
+            <if test="os != null">os = #{os},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="msg != null">msg = #{msg},</if>
+            <if test="loginTime != null">login_time = #{loginTime},</if>
+        </trim>
+        where lo_id = #{loId}
+    </update>
+
+    <delete id="deleteAppLoginInfoById" parameterType="Long">
+        delete from app_login_info where lo_id = #{loId}
+    </delete>
+
+    <delete id="deleteAppLoginInfoByIds" parameterType="String">
+        delete from app_login_info where lo_id in
+        <foreach item="loId" collection="array" open="(" separator="," close=")">
+            #{loId}
+        </foreach>
+    </delete>
+
+</mapper>

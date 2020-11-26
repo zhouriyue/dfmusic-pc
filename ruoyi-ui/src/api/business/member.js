@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// 查询用户列表
+export function getTotalNumber() {
+  return request({
+    url: '/business/member/getTotalNumber',
+    method: 'get'
+  })
+}
+
 // 查询会员信息管理列表
 export function listMember(query) {
   return request({

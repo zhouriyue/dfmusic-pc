@@ -2,6 +2,8 @@ package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ruoyi.business.domain.vo.UserDetailVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -453,5 +455,25 @@ public class SysUserServiceImpl implements ISysUserService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public UserDetailVo getUserDetail(SysUser sysUser) {
+        return userMapper.getUserDetail(sysUser);
+    }
+
+    @Override
+    public long insertUserDetail(UserDetailVo userDetailVo) {
+        return userMapper.insertUserDetail(userDetailVo);
+    }
+
+    @Override
+    public Long getTotalNumber() {
+        return userMapper.getTotalNumber();
+    }
+
+    @Override
+    public Long userChangeMember(Long userId) {
+        return userMapper.userChangeMember(userId);
     }
 }

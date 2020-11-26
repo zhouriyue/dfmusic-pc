@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.business.mapper.SonglistMapper">
-    
+
     <resultMap type="Songlist" id="SonglistResult">
         <result property="slId"    column="sl_id"    />
         <result property="slName"    column="sl_name"    />
@@ -14,48 +14,230 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="colNumber"    column="col_number"    />
         <result property="commentsNumber"    column="comments_number"    />
         <result property="shareNumber"    column="share_number"    />
-        <result property="createBy"    column="create_by"    />
+        <result property="createById"    column="create_by_id"    />
         <result property="detail"    column="detail"    />
         <result property="isAlbum"    column="is_album"    />
         <result property="sinId"    column="sin_id"    />
         <result property="isPublic"    column="is_public"    />
+        <result property="isOff"    column="is_off"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="delTime"    column="del_time"    />
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
+    <resultMap type="Song" id="SongResult">
+        <result property="songId"    column="song_id"    />
+        <result property="songName"    column="song_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="duration"    column="duration"    />
+        <result property="issuingDate"    column="issuing_date"    />
+        <result property="mvUrl"    column="mv_url"    />
+        <result property="isCharge"    column="is_charge"    />
+        <result property="isCopyright"    column="is_copyright"    />
+        <result property="isSingle"    column="is_single"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="standardUrl"    column="standard_url"    />
+        <result property="hqUrl"    column="hq_url"    />
+        <result property="sqUrl"    column="sq_url"    />
+        <result property="witPreUrl"    column="wit_pre_url"    />
+        <result property="lyrId"    column="lyr_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="todayPlay"    column="today_play"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="isOriginal"    column="is_original"    />
+        <association property="songlistes"    column="sl_id" javaType="songlist" resultMap="SonglistResult" />
+        <collection  property="singerList"   javaType="java.util.List" resultMap="SingerResult"/>
+    </resultMap>
+
+    <resultMap type="Singer" id="SingerResult">
+        <result property="sinId"    column="sin_id"    />
+        <result property="sinName"    column="sin_name"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="sex"    column="sex"    />
+        <result property="year"    column="year"    />
+        <result property="sinType"    column="sin_type"    />
+        <result property="area"    column="area"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="followerNumber"    column="follower_number"    />
+        <result property="albumNumber"    column="album_number"    />
+        <result property="mvNumber"    column="mv_number"    />
+        <result property="detail"    column="detail"    />
+        <result property="influencePower"    column="influence_power"    />
+        <result property="certInfo"    column="cert_info"    />
+        <result property="earlyExp"    column="early_exp"    />
+        <result property="performingExp"    column="performing_exp"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+    </resultMap>
+
+    <resultMap type="SongSonglist" id="SongSonglistResult">
+        <result property="id"    column="id"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="songId"    column="song_id"    />
+    </resultMap>
+
+    <resultMap type="SonglistdetailVo" id="SonglistdetailVoResult">
+        <result property="slId"    column="sl_id"    />
+        <result property="slName"    column="sl_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="createById"    column="create_by_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="detail"    column="detail"    />
+        <result property="isAlbum"    column="is_album"    />
+        <result property="isPublic"    column="is_public"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+    </resultMap>
+
     <sql id="selectSonglistVo">
-        select sl_id, sl_name, cover_picture, sl_title, play_number, song_number, col_number, comments_number, share_number, create_by, detail, is_album, sin_id, is_public, create_time, update_time, del_time, del_flag from songlist
+        select sl.sl_id, sl.sl_name, sl.cover_picture, sl.sl_title, sl.play_number,
+        (SELECT COUNT(*) FROM song_songlist as ssll where ssll.sl_id = sl.sl_id) as song_number,
+        sl.col_number, sl.comments_number, sl.share_number, sl.create_by_id, sl.detail,
+        sl.is_album, sl.sin_id, sl.is_public, sl.create_time, sl.update_time, sl.del_time, sl.del_flag,sl.is_off
+        from songlist sl
+    </sql>
+
+    <sql id="selectSonglistdetailVo">
+        select sl.sl_id, sl.sl_name, sl.cover_picture, sl.sl_title, sl.play_number, (SELECT COUNT(*) FROM song_songlist as ssll where ssll.sl_id = sl.sl_id) as song_number,
+        sl.col_number, sl.comments_number, sl.share_number, sl.create_by_id, sl.detail, sl.is_album,sl.is_off,
+        sl.is_public, sl.create_time, sl.update_time,u.user_name as user_name,u.nick_name as nick_name
+        from songlist sl,sys_user u
+    </sql>
+
+    <sql id="songToSonglistVo">
+        select s.song_id, s.song_name, s.cover_picture, s.duration, s.issuing_date, s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.standard_url, s.hq_url, s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time,s.del_flag
+        from song_songlist ssli,song s
+    </sql>
+
+    <sql id="songToSonglist">
+        select id,sl_id,song_id
+        from song_songlist
+    </sql>
+
+    <!--获取创建歌单的用户-->
+    <sql id="sysUserVo">
+        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar,
+        u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark
+        from sys_user u
+             left join songlist sl on sl.create_by_id = u.user_id
+    </sql>
+
+    <!--歌曲详情-->
+    <sql id="selectRankingSingerVo">
+        select s.song_id, s.song_name,s.cover_picture, s.sin_id, s.duration, s.issuing_date,
+        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.sl_id, s.standard_url, s.hq_url,
+        s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time, s.del_flag,
+        s.today_play,s.play_number,s.is_original,
+        sr.sin_id, sr.sin_name, sr.nickname, sr.sex, sr.year, sr.sin_type, sr.area,
+        sr.song_number, sr.follower_number, sr.album_number, sr.mv_number,sr.human_qi,
+        sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,
+        sr.del_flag, sr.create_time, sr.update_time, sr.del_time,sr.cur_rank,sr.last_rank,sr.picture,sl.sl_name
+        from song s
+              left join song_singer ssr on ssr.song_id=s.song_id
+              left join singer sr on ssr.sin_id=sr.sin_id
+              left join song_songlist ssli on ssli.song_id=s.song_id
+              left join songlist sl on sl.sl_id=ssli.sl_id
     </sql>
 
     <select id="selectSonglistList" parameterType="Songlist" resultMap="SonglistResult">
         <include refid="selectSonglistVo"/>
-        <where>  
-            <if test="slId != null "> and sl_id = #{slId}</if>
-            <if test="slName != null  and slName != ''"> and sl_name like concat('%', #{slName}, '%')</if>
-            <if test="coverPicture != null  and coverPicture != ''"> and cover_picture = #{coverPicture}</if>
-            <if test="slTitle != null  and slTitle != ''"> and sl_title = #{slTitle}</if>
-            <if test="playNumber != null "> and play_number = #{playNumber}</if>
-            <if test="songNumber != null "> and song_number = #{songNumber}</if>
-            <if test="colNumber != null "> and col_number = #{colNumber}</if>
-            <if test="commentsNumber != null "> and comments_number = #{commentsNumber}</if>
-            <if test="shareNumber != null "> and share_number = #{shareNumber}</if>
-            <if test="createBy != null "> and create_by = #{createBy}</if>
-            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
-            <if test="isAlbum != null "> and is_album = #{isAlbum}</if>
-            <if test="sinId != null "> and sin_id = #{sinId}</if>
-            <if test="isPublic != null  and isPublic != ''"> and is_public = #{isPublic}</if>
-            <if test="createTime != null "> and create_time = #{createTime}</if>
-            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        <where>
+            <if test="slId != null "> and sl.sl_id = #{slId}</if>
+            <if test="slName != null  and slName != ''"> and sl.sl_name like concat('%', #{slName}, '%')</if>
+            <if test="coverPicture != null  and coverPicture != ''"> and sl.cover_picture = #{coverPicture}</if>
+            <if test="slTitle != null  and slTitle != ''"> and sl.sl_title = #{slTitle}</if>
+            <if test="playNumber != null "> and sl.play_number = #{playNumber}</if>
+            <if test="songNumber != null "> and sl.song_number = #{songNumber}</if>
+            <if test="colNumber != null "> and sl.col_number = #{colNumber}</if>
+            <if test="commentsNumber != null "> and sl.comments_number = #{commentsNumber}</if>
+            <if test="shareNumber != null "> and sl.share_number = #{shareNumber}</if>
+            <if test="createById != null "> and sl.create_by_id = #{createById}</if>
+            <if test="detail != null  and detail != ''"> and sl.detail = #{detail}</if>
+            <if test="isAlbum != null "> and sl.is_album = #{isAlbum}</if>
+            <if test="sinId != null "> and sl.sin_id = #{sinId}</if>
+            <if test="isPublic != null  and isPublic != ''"> and sl.is_public = #{isPublic}</if>
+            <if test="createTime != null "> and sl.create_time = #{createTime}</if>
+            <if test="updateTime != null "> and sl.update_time = #{updateTime}</if>
         </where>
     </select>
-    
+
     <select id="selectSonglistById" parameterType="Long" resultMap="SonglistResult">
         <include refid="selectSonglistVo"/>
         where sl_id = #{slId}
     </select>
-        
+
+    <select id="selectSonglistSong" parameterType="Long" resultMap="SongSonglistResult">
+        <include refid="songToSonglist"/>
+        where sl_id = #{slId} and song_id = #{songId}
+    </select>
+
+    <select id="getIndexSong" resultMap="SongResult">
+        <include refid="songToSonglistVo"/>
+        where ssli.sl_id = #{slId} and ssli.song_id = s.song_id
+    </select>
+
+    <select id="getSonglistDetail" parameterType="Songlist" resultMap="SonglistdetailVoResult">
+        <include refid="selectSonglistdetailVo"/>
+        <where>
+            u.user_id = sl.create_by_id
+            <if test="slId != null "> and sl.sl_id = #{slId}</if>
+        </where>
+    </select>
+
+    <!--获取歌曲详情-->
+    <select id="selectSongDetail" parameterType="Long" resultMap="SongResult">
+        <include refid="selectRankingSingerVo"/>
+        WHERE sl.sl_id = #{slId}
+    </select>
+
+    <!--获取创建歌单的用户-->
+    <select id="selectUserSonglist" parameterType="Long" resultMap="SysUserResult">
+        <include refid="sysUserVo"/>
+        WHERE sl.sl_id = #{slId}
+    </select>
+
+    <!--查询歌单-->
+    <select id="searchSonglist" resultMap="SonglistdetailVoResult">
+        <include refid="selectSonglistdetailVo"/>
+        <where>
+            <if test="createTime != null">and year(sl.create_time) = year(#{createTime}) and month(sl.create_time) = month(#{createTime}) and day(sl.create_time) = day(#{createTime})</if>
+            <if test="isAlbum != null">and sl.is_album = #{isAlbum}</if>
+            <if test="wordKey != null and wordKey != ''">and sl.sl_name like concat('%', #{wordKey}, '%') or u.user_name like concat('%', #{wordKey}, '%') or u.nick_name like concat('%', #{wordKey}, '%')</if>
+        </where>
+    </select>
+
     <insert id="insertSonglist" parameterType="Songlist" useGeneratedKeys="true" keyProperty="slId">
         insert into songlist
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -67,7 +249,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="colNumber != null">col_number,</if>
             <if test="commentsNumber != null">comments_number,</if>
             <if test="shareNumber != null">share_number,</if>
-            <if test="createBy != null">create_by,</if>
+            <if test="createById != null">create_by_id,</if>
             <if test="detail != null">detail,</if>
             <if test="isAlbum != null">is_album,</if>
             <if test="sinId != null">sin_id,</if>
@@ -75,7 +257,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delTime != null">del_time,</if>
-            <if test="delFlag != null">del_flag,</if>
+            <if test="delFlag != null">del_flag</if>
+            <if test="isOff != null">is_off</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="slName != null and slName != ''">#{slName},</if>
@@ -86,7 +269,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="colNumber != null">#{colNumber},</if>
             <if test="commentsNumber != null">#{commentsNumber},</if>
             <if test="shareNumber != null">#{shareNumber},</if>
-            <if test="createBy != null">#{createBy},</if>
+            <if test="createById != null">#{createById},</if>
             <if test="detail != null">#{detail},</if>
             <if test="isAlbum != null">#{isAlbum},</if>
             <if test="sinId != null">#{sinId},</if>
@@ -95,7 +278,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delTime != null">#{delTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="isOff != null">#{isOff}</if>
          </trim>
+    </insert>
+
+    <insert id="addToSonglist" useGeneratedKeys="true" keyProperty="id">
+        insert into song_songlist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="slId != null">sl_id,</if>
+            <if test="songId != null">song_id</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="slId != null">#{slId},</if>
+            <if test="songId != null">#{songId}</if>
+        </trim>
+    </insert>
+
+    <!--为歌单添加歌曲-->
+    <insert id="addSongToSl">
+        insert into song_songlist(sl_id,song_id,is_album) value
+        <foreach item="songId" collection="songIds" open="" separator="," close="">
+            (#{slId},#{songId},#{isAlbum})
+        </foreach>
     </insert>
 
     <update id="updateSonglist" parameterType="Songlist">
@@ -109,7 +313,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="colNumber != null">col_number = #{colNumber},</if>
             <if test="commentsNumber != null">comments_number = #{commentsNumber},</if>
             <if test="shareNumber != null">share_number = #{shareNumber},</if>
-            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createById != null">create_by_id = #{createById},</if>
             <if test="detail != null">detail = #{detail},</if>
             <if test="isAlbum != null">is_album = #{isAlbum},</if>
             <if test="sinId != null">sin_id = #{sinId},</if>
@@ -118,6 +322,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delTime != null">del_time = #{delTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="isOff != null">is_off = #{isOff}</if>
         </trim>
         where sl_id = #{slId}
     </update>
@@ -126,11 +331,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from songlist where sl_id = #{slId}
     </delete>
 
+    <delete id="deleteSonglisSong" parameterType="Long">
+        delete from song_songlist where sl_id = #{slId}
+    </delete>
+
     <delete id="deleteSonglistByIds" parameterType="String">
-        delete from songlist where sl_id in 
+        delete from songlist where sl_id in
         <foreach item="slId" collection="array" open="(" separator="," close=")">
             #{slId}
         </foreach>
     </delete>
-    
+
+    <delete id="deleteSonglistSong">
+        delete from song_songlist where sl_id = #{slId} and song_id = #{songId}
+    </delete>
+
 </mapper>

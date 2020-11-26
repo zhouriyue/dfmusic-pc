@@ -2,6 +2,8 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.Singer;
+import com.ruoyi.business.domain.Songlist;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 歌手信息Mapper接口
@@ -58,4 +60,16 @@ public interface SingerMapper
      * @return 结果
      */
     public int deleteSingerByIds(Long[] sinIds);
+
+    public List<Singer> selectSingerKey(@Param("sinId") Integer sinId,@Param("key") String key);
+
+    public List<Singer> selectSingerRank();
+
+    public List<Singer> selectRankAll();
+
+    public Singer selectSingerDetail(Long sinId);
+
+    public List<Songlist> selectSingerAlbum(Long sinId);
+
+    public List<Singer> selectFristPySinName(@Param("fristPy") String fristPy);
 }

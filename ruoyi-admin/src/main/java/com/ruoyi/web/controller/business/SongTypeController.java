@@ -34,6 +34,13 @@ public class SongTypeController extends BaseController
     @Autowired
     private ISongTypeService songTypeService;
 
+    /** 获取某种类型的歌曲**/
+    @GetMapping("/getTypeSong")
+    public TableDataInfo getTypeSong(Long stId) {
+        startPage();
+        return  getDataTable(songTypeService.getTypeSong(stId));
+    }
+
     /**
      * 查询歌曲类型列表
      */

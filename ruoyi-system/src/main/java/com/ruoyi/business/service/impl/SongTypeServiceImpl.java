@@ -2,6 +2,7 @@ package com.ruoyi.business.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.business.domain.Song;
 import com.ruoyi.business.domain.SongType;
 import com.ruoyi.business.mapper.SongTypeMapper;
 import com.ruoyi.common.utils.DateUtils;
@@ -94,4 +95,10 @@ public class SongTypeServiceImpl implements ISongTypeService
     {
         return songTypeMapper.deleteSongTypeById(stId);
     }
+
+    @Override
+    public List<Song> getTypeSong(Long stId) {
+        return songTypeMapper.getTypeSong(stId);
+    }
+
 }

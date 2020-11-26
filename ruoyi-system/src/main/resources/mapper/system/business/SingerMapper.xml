@@ -21,14 +21,67 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="certInfo"    column="cert_info"    />
         <result property="earlyExp"    column="early_exp"    />
         <result property="performingExp"    column="performing_exp"    />
+        <result property="humanQi"    column="human_qi"    />
+        <result property="picture"    column="picture"    />
+        <result property="curRank"    column="cur_rank"    />
+        <result property="lastRank"    column="last_rank"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="delTime"    column="del_time"    />
     </resultMap>
 
+    <resultMap type="Songlist" id="SonglistResult">
+        <result property="slId"    column="sl_id"    />
+        <result property="slName"    column="sl_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="slTitle"    column="sl_title"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="colNumber"    column="col_number"    />
+        <result property="commentsNumber"    column="comments_number"    />
+        <result property="shareNumber"    column="share_number"    />
+        <result property="createById"    column="create_by_id"    />
+        <result property="detail"    column="detail"    />
+        <result property="isAlbum"    column="is_album"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="isPublic"    column="is_public"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
     <sql id="selectSingerVo">
-        select sin_id, sin_name, nickname, sex, year, sin_type, area, song_number, follower_number, album_number, mv_number, detail, influence_power, cert_info, early_exp, performing_exp, del_flag, create_time, update_time, del_time from singer
+        select sin_id, sin_name, nickname, sex, year, sin_type, area,
+        song_number, follower_number, album_number, mv_number,human_qi,
+        detail, influence_power, cert_info, early_exp, performing_exp,
+        del_flag, create_time, update_time, del_time,cur_rank,last_rank,picture
+        from singer
+    </sql>
+
+    <sql id="selectSingerDetailVo">
+        select s.sin_id, s.sin_name, s.nickname, s.sex, s.year, s.sin_type, s.area,
+        (select COUNT(*) from song_singer ssr where ssr.sin_id = s.sin_id)
+         as song_number, s.follower_number,
+        (select COUNT(DISTINCT sl_id) from song_singer ssr,song_songlist ssli
+        where ssr.sin_id = s.sin_id and ssr.song_id = ssli.song_id and ssli.is_album = 1)
+        as album_number, s.mv_number,s.human_qi,
+        s.detail, s.influence_power, s.cert_info, s.early_exp, s.performing_exp,
+        s.del_flag, s.create_time, s.update_time, s.del_time,s.cur_rank,s.last_rank,s.picture
+        from singer s
+    </sql>
+
+    <!--歌单-->
+    <sql id="selectSonglistVo">
+        select sl.sl_id, sl.sl_name, sl.cover_picture, sl.sl_title, sl.play_number,
+        (SELECT COUNT(*) FROM song_songlist as ssll where ssll.sl_id = sl.sl_id) as song_number,
+        sl.col_number, sl.comments_number, sl.share_number, sl.create_by_id, sl.detail,
+        sl.is_album, sl.sin_id, sl.is_public, sl.create_time, sl.update_time, sl.del_time, sl.del_flag
+        from singer sr
+             left join song_singer ssr on ssr.sin_id = sr.sin_id
+             left join song_songlist ssli on ssli.song_id = ssr.song_id
+             left join songlist sl on sl.sl_id = ssli.sl_id
     </sql>
 
     <select id="selectSingerList" parameterType="Singer" resultMap="SingerResult">
@@ -43,12 +96,54 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="followerNumber != null "> and follower_number = #{followerNumber}</if>
         </where>
     </select>
-    
+
+    <select id="selectSingerKey" resultMap="SingerResult">
+        <include refid="selectSingerVo"/>
+        <where>
+            <if test="sinId != null and sinId != 0"> or sin_id like concat('%', #{sinId}, '%') </if>
+            <if test="key != null  and key != ''"> or sin_name like concat('%', #{key}, '%')</if>
+            <if test="key != null  and key != ''"> or nickname like concat('%', #{key}, '%')</if>
+        </where>
+    </select>
+
     <select id="selectSingerById" parameterType="Long" resultMap="SingerResult">
         <include refid="selectSingerVo"/>
         where sin_id = #{sinId}
     </select>
-        
+
+    <!--获取歌手排名-->
+    <select id="selectSingerRank" resultMap="SingerResult">
+        <include refid="selectSingerVo"/>
+        ORDER BY human_qi DESC LIMIT 0,10
+    </select>
+
+    <!--获取全部歌手排名-->
+    <select id="selectRankAll" resultMap="SingerResult">
+        <include refid="selectSingerVo"/>
+        ORDER BY human_qi DESC
+    </select>
+
+    <!--获取歌手详情，包括歌曲数、歌单数-->
+    <select id="selectSingerDetail" parameterType="Long" resultMap="SingerResult">
+        <include refid="selectSingerDetailVo"/>
+        where s.sin_id = #{sinId}
+    </select>
+
+    <!--获取歌手的专辑-->
+    <select id="selectSingerAlbum" parameterType="Long" resultMap="SonglistResult">
+        <include refid="selectSonglistVo"/>
+        where ssli.is_album = 1 and sr.sin_id = #{sinId}
+        GROUP BY sl_id
+    </select>
+
+    <!--获取歌手排名-->
+    <select id="selectFristPySinName" resultMap="SingerResult">
+        <include refid="selectSingerVo"/>
+        <where>
+            <if test="fristPy != null "> upper(fristPinyin(sin_name)) = #{fristPy}</if>
+        </where>
+    </select>
+
     <insert id="insertSinger" parameterType="Singer" useGeneratedKeys="true" keyProperty="sinId">
         insert into singer
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -71,6 +166,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delTime != null">del_time,</if>
+            <if test="curRank != null">cur_rank,</if>
+            <if test="lastRank != null">last_rank,</if>
+            <if test="picture != null">picture</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sinName != null">#{sinName},</if>
@@ -92,6 +190,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delTime != null">#{delTime},</if>
+            <if test="curRank != null">#{curRank},</if>
+            <if test="lastRank != null">#{lastRank},</if>
+            <if test="picture != null">#{picture}</if>
          </trim>
     </insert>
 
@@ -117,6 +218,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="curRank != null">cur_rank = #{curRank},</if>
+            <if test="lastRank != null">last_rank = #{lastRank},</if>
+            <if test="picture != null">picture = #{picture}</if>
         </trim>
         where sin_id = #{sinId}
     </update>

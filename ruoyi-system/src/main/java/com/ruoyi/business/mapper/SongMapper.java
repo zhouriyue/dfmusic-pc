@@ -1,6 +1,8 @@
 package com.ruoyi.business.mapper;
 
 import java.util.List;
+
+import com.ruoyi.business.domain.Singer;
 import com.ruoyi.business.domain.Song;
 
 /**
@@ -58,4 +60,18 @@ public interface SongMapper
      * @return 结果
      */
     public int deleteSongByIds(Long[] songIds);
+
+    public List<Song> selectSongKey(String wordKey);
+
+    public List<Song> selectAll(Long slId);
+
+    public List<Singer> selectSinger(Long songId);
+
+    public List<Song> getRiseSong();
+
+    public List<Song> getNewSong();
+
+    public List<Song> getOriginalSong();
+
+    public List<Song> getHotSong();
 }

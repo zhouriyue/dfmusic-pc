@@ -1,5 +1,47 @@
 import request from '@/utils/request'
 
+// 查询歌手专辑列表
+export function selectFristPySinName(query) {
+  return request({
+    url: '/business/singer/selectFristPySinName',
+    method: 'get',
+    params: query
+  })
+}
+// 查询歌手专辑列表
+export function selectSingerAlbum(query) {
+  return request({
+    url: '/business/singer/selectSingerAlbum',
+    method: 'get',
+    params: query
+  })
+}
+// 查询歌手详情列表
+export function selectSingerDetail(query) {
+  return request({
+    url: '/business/singer/selectSingerDetail',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询全部歌手信息列表
+export function selectRankAll(query) {
+  return request({
+    url: '/business/singer/selectRankAll',
+    method: 'get',
+    params: query
+  })
+}
+// 查询歌手信息列表
+export function selectSingerRank(query) {
+  return request({
+    url: '/business/singer/selectSingerRank',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询歌手信息列表
 export function listSinger(query) {
   return request({

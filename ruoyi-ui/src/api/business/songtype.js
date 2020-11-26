@@ -1,6 +1,14 @@
 import request from '@/utils/request'
 
 // 查询歌曲类型列表
+export function getTypeSong(query) {
+  return request({
+    url: '/business/songtype/getTypeSong',
+    method: 'get',
+    params: query
+  })
+}
+// 查询歌曲类型列表
 export function listSongtype(query) {
   return request({
     url: '/business/songtype/list',

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.TOrderMapper">
+    
+    <resultMap type="TOrder" id="TOrderResult">
+        <result property="oId"    column="o_id"    />
+        <result property="orderState"    column="order_state"    />
+        <result property="amount"    column="amount"    />
+        <result property="isSeries"    column="is_series"    />
+        <result property="songId"    column="song_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <association property="sysUser"    column="user_id" javaType="SysUser" resultMap="SysUserResult" />
+        <association property="song"    column="song_id" javaType="Song" resultMap="SongResult" />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+    </resultMap>
+
+    <resultMap type="Song" id="SongResult">
+        <result property="songId"    column="song_id"    />
+        <result property="songName"    column="song_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="duration"    column="duration"    />
+        <result property="issuingDate"    column="issuing_date"    />
+        <result property="mvUrl"    column="mv_url"    />
+        <result property="isCharge"    column="is_charge"    />
+        <result property="isCopyright"    column="is_copyright"    />
+        <result property="isSingle"    column="is_single"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="standardUrl"    column="standard_url"    />
+        <result property="hqUrl"    column="hq_url"    />
+        <result property="sqUrl"    column="sq_url"    />
+        <result property="witPreUrl"    column="wit_pre_url"    />
+        <result property="lyrId"    column="lyr_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="todayPlay"    column="today_play"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="isOriginal"    column="is_original"    />
+        <collection  property="singerList"   javaType="java.util.List" resultMap="SingerResult"/>
+    </resultMap>
+
+    <resultMap type="Singer" id="SingerResult">
+        <result property="sinId"    column="sin_id"    />
+        <result property="sinName"    column="sin_name"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="sex"    column="sex"    />
+        <result property="year"    column="year"    />
+        <result property="sinType"    column="sin_type"    />
+        <result property="area"    column="area"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="followerNumber"    column="follower_number"    />
+        <result property="albumNumber"    column="album_number"    />
+        <result property="mvNumber"    column="mv_number"    />
+        <result property="detail"    column="detail"    />
+        <result property="influencePower"    column="influence_power"    />
+        <result property="certInfo"    column="cert_info"    />
+        <result property="earlyExp"    column="early_exp"    />
+        <result property="humanQi"    column="human_qi"    />
+        <result property="picture"    column="picture"    />
+        <result property="curRank"    column="cur_rank"    />
+        <result property="lastRank"    column="last_rank"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+    </resultMap>
+
+    <resultMap type="OrderScopeCount" id="OrderScopeCountResult">
+        <result property="createTime"    column="createTime"    />
+        <result property="count"    column="count"    />
+    </resultMap>
+
+    <sql id="selectTOrderVo">
+        select tor.o_id, tor.order_state, tor.amount, tor.user_id, tor.is_series, tor.song_id, tor.create_time, tor.update_time, tor.del_time, tor.del_flag,
+        s.song_id, s.song_name,s.cover_picture, s.sin_id, s.duration, s.issuing_date,
+        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.sl_id, s.standard_url, s.hq_url,
+        s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time, s.del_flag,
+        s.today_play,s.play_number,s.is_original,
+        u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex,
+        sr.sin_id, sr.sin_name, sr.nickname, sr.sex, sr.year, sr.sin_type, sr.area,
+        sr.song_number, sr.follower_number, sr.album_number, sr.mv_number,sr.human_qi,
+        sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,
+        sr.del_flag, sr.create_time, sr.update_time, sr.del_time,sr.cur_rank,sr.last_rank,sr.picture
+        from t_order tor
+              left join song s on s.song_id = tor.song_id
+              left join song_singer ssr on ssr.song_id=s.song_id
+              left join singer sr on ssr.sin_id=sr.sin_id
+              left join sys_user u on u.user_id = tor.user_id
+    </sql>
+
+    <sql id="selectScopeDayVo">
+        select DATE_FORMAT(create_time, '%Y-%m-%d') createTime,COUNT(o_id) count
+        from t_order
+    </sql>
+
+    <sql id="selectScopeMonthVo">
+        select DATE_FORMAT(create_time, '%Y-%m') createTime,COUNT(o_id) count
+        from t_order
+    </sql>
+
+    <select id="selectTOrderList" parameterType="TOrder" resultMap="TOrderResult">
+        <include refid="selectTOrderVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="delTime != null "> and del_time = #{delTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTOrderById" parameterType="Long" resultMap="TOrderResult">
+        <include refid="selectTOrderVo"/>
+        where o_id = #{oId}
+    </select>
+
+    <select id="getScopeOrderDay" resultMap="OrderScopeCountResult">
+        <include refid="selectScopeDayVo"/>
+        <where>
+            <if test="orderState != null"> order_state = #{orderState} and</if>
+            create_time between #{startDate} and #{endDate}
+        </where>
+        GROUP BY createTime
+    </select>
+
+    <select id="getScopeOrderMonth" resultMap="OrderScopeCountResult">
+        <include refid="selectScopeMonthVo"/>
+        <where>
+            <if test="orderState != null"> order_state = #{orderState} and</if>
+            create_time between #{startDate} and #{endDate}
+        </where>
+        GROUP BY createTime
+    </select>
+
+    <!--获取订单总数-->
+    <select id="getOrderTotal" resultType="Long">
+        select COUNT(*)
+        from t_order
+    </select>
+        
+    <insert id="insertTOrder" parameterType="TOrder" useGeneratedKeys="true" keyProperty="oId">
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderState != null">order_state,</if>
+            <if test="amount != null">amount,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isSeries != null">is_series,</if>
+            <if test="songId != null">song_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delTime != null">del_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderState != null">#{orderState},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isSeries != null">#{isSeries},</if>
+            <if test="songId != null">#{songId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delTime != null">#{delTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTOrder" parameterType="TOrder">
+        update t_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderState != null">order_state = #{orderState},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isSeries != null">is_series = #{isSeries},</if>
+            <if test="songId != null">song_id = #{songId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delTime != null">del_time = #{delTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where o_id = #{oId}
+    </update>
+
+    <delete id="deleteTOrderById" parameterType="Long">
+        delete from t_order where o_id = #{oId}
+    </delete>
+
+    <delete id="deleteTOrderByIds" parameterType="String">
+        delete from t_order where o_id in 
+        <foreach item="oId" collection="array" open="(" separator="," close=")">
+            #{oId}
+        </foreach>
+    </delete>
+    
+</mapper>

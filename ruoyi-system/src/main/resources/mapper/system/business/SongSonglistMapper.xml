@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SongSonglistMapper">
+    
+    <resultMap type="SongSonglist" id="SongSonglistResult">
+        <result property="id"    column="id"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="songId"    column="song_id"    />
+        <result property="isAlbum"    column="is_album"    />
+    </resultMap>
+
+    <sql id="selectSongSonglistVo">
+        select id, sl_id, song_id, is_album from song_songlist
+    </sql>
+
+    <select id="selectSongSonglistList" parameterType="SongSonglist" resultMap="SongSonglistResult">
+        <include refid="selectSongSonglistVo"/>
+        <where>  
+            <if test="slId != null "> and sl_id = #{slId}</if>
+            <if test="songId != null "> and song_id = #{songId}</if>
+            <if test="isAlbum != null "> and is_album = #{isAlbum}</if>
+        </where>
+    </select>
+    
+    <select id="selectSongSonglistById" parameterType="Long" resultMap="SongSonglistResult">
+        <include refid="selectSongSonglistVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSongSonglist" parameterType="SongSonglist" useGeneratedKeys="true" keyProperty="id">
+        insert into song_songlist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="slId != null">sl_id,</if>
+            <if test="songId != null">song_id,</if>
+            <if test="isAlbum != null">is_album,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="slId != null">#{slId},</if>
+            <if test="songId != null">#{songId},</if>
+            <if test="isAlbum != null">#{isAlbum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSongSonglist" parameterType="SongSonglist">
+        update song_songlist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="slId != null">sl_id = #{slId},</if>
+            <if test="songId != null">song_id = #{songId},</if>
+            <if test="isAlbum != null">is_album = #{isAlbum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSongSonglistById" parameterType="Long">
+        delete from song_songlist where id = #{id}
+    </delete>
+
+    <delete id="deleteSlIdSongId" parameterType="Long">
+        delete from song_songlist where sl_id = #{slId} and song_id = #{songId} and is_album = 1
+    </delete>
+
+    <delete id="deleteSongSonglistByIds" parameterType="String">
+        delete from song_songlist where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -59,4 +59,22 @@ public interface IMemberService
      * @return 结果
      */
     public int deleteMemberById(Long mId);
+
+    /**
+     * android 端
+     * 查询会员信息
+     * @param mId
+     * @return
+     */
+    public Member getMember(Long mId);
+
+    /**
+     * 更新会员天数
+     * @param count
+     * @return
+     */
+    public long updateValidDay(Long mId, Long count);
+
+    /** 充值 **/
+    public long recharge(Long mId,Integer rechargeDay);
 }

@@ -1,6 +1,8 @@
 package com.ruoyi.business.service;
 
+import com.ruoyi.business.domain.Singer;
 import com.ruoyi.business.domain.Song;
+import com.ruoyi.common.core.page.TableDataInfo;
 
 import java.util.List;
 
@@ -59,4 +61,19 @@ public interface ISongService
      * @return 结果
      */
     public int deleteSongById(Long songId);
+
+    public List<Song> selectSongKey(String wordKey);
+
+    public List<Song> selectAll(Long slId);
+
+    public List<Singer> selectSinger(Long songId);
+
+    public List<Song> getRiseSong();
+
+    public List<Song> getNewSong();
+
+    public List<Song> getOriginalSong();
+
+    public List<Song> getHotSong();
+
 }

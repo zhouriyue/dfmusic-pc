@@ -1,19 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="等级" prop="mGrade">
+      <el-form-item label="用户名" prop="userName">
         <el-input
-          v-model="queryParams.mGrade"
-          placeholder="请输入等级"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户编号" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户编号"
+          v-model="queryParams.userName"
+          placeholder="请输入用户名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -26,15 +17,6 @@
           value-format="yyyy-MM-dd"
           placeholder="选择创建时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="更新时间" prop="updateTime">
-        <el-input
-          v-model="queryParams.updateTime"
-          placeholder="请输入更新时间"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -86,15 +68,26 @@
 
     <el-table v-loading="loading" :data="memberList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="会员编号" align="center" prop="mId" />
+      <el-table-column label="用户名" align="center" prop="sysUser.userName"/>
+      <el-table-column label="昵称" align="center" prop="sysUser.nickName"/>
+      <el-table-column label="头像" width="80" align="center" prop="avatar">
+        <template slot-scope="scope">
+          <img :src="baseUrl+scope.row.sysUser.avatar" alt="" style="width:60px;height:60px;">
+        </template>
+      </el-table-column>
       <el-table-column label="等级" align="center" prop="mGrade" />
-      <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column label="到期时间" align="center" prop="validDay">
+        <template slot-scope="scope">
+          {{fun_date(scope.row.validDay,parseTime(scope.row.createTime, '{y}-{m}-{d}'))}}
+        </template>
+      </el-table-column>
+      <el-table-column label="电话" align="center" prop="sysUser.phonenumber" />
+      <el-table-column label="邮箱" align="center" prop="sysUser.email" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" align="center" prop="updateTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -114,7 +107,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -126,11 +119,32 @@
     <!-- 添加或修改会员信息管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="等级" prop="mGrade">
-          <el-input v-model="form.mGrade" placeholder="请输入等级" />
+        <el-form-item label="充值天数" prop="stName" class="item-magin">
+          <el-select v-model="form.validDay" placeholder="请选择下拉选择" clearable :style="{width: '100%'}">
+            <el-option v-for="(item, index) in setMealList" :key="index" :label="item.smName"
+                       :value="item.rechargeDay" :disabled="item.disabled"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="用户编号" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户编号" />
+        <el-form-item label="用户" class="item-magin">
+          <div style="display:flex;flex-wrap: wrap;">
+            <div style="width: 70%;">
+              <el-select id="select" v-model="form.userId" placeholder="请选择用户" style="width: 100%;">
+                <el-option
+                  v-for="item in userList"
+                  :key="item.userId"
+                  :label="item.userName"
+                  :value="item.userId"
+                  :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
+            </div>
+            <div style="width: 30%;">
+              <el-input v-model="form.userName" placeholder="请输入信息"
+                        class="select"
+                        @keyup.enter.native="selectUser"
+                        v-on:input="selectUser"/>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -142,12 +156,17 @@
 </template>
 
 <script>
+  import { listSet_meal} from "@/api/business/set_meal";
 import { listMember, getMember, delMember, addMember, updateMember, exportMember } from "@/api/business/member";
+import {selectUser} from "@/api/system/user";
 
 export default {
   name: "Member",
   data() {
     return {
+      setMealList:[],
+      userList:[],
+      baseUrl:'http://47.114.190.44',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -186,6 +205,13 @@ export default {
     this.getList();
   },
   methods: {
+    /** 查询歌单列表 */
+    selectUser(){
+      selectUser({userName:this.form.userName}).then(response => {
+        this.userList = response.rows
+        document.getElementById("select").click()
+      })
+    },
     /** 查询会员信息管理列表 */
     getList() {
       this.loading = true;
@@ -193,6 +219,9 @@ export default {
         this.memberList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+      listSet_meal().then(response => {
+        this.setMealList = response.rows;
       });
     },
     // 取消按钮
@@ -295,7 +324,21 @@ export default {
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});
+    },
+    fun_date(d,time) {
+      var date1 = new Date(time),
+        time1 = date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDate()//time1表示当前时间
+      var date2 = new Date(date1)
+      date2.setDate(date1.getDate() + d)
+      var time2 = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+      return time2
     }
   }
 };
 </script>
+<style>
+  .item-magin {
+    margin-right: 30px;
+    height: 50px;
+  }
+</style>

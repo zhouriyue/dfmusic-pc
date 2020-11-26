@@ -1,16 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="类型id" prop="stId">
-        <el-input
-          v-model="queryParams.stId"
-          placeholder="请输入类型id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="类型名" prop="stName">
+      <div style="display: flex;flex-wrap: wrap;">
+      <el-form-item class="search-item" label="类型名" prop="stName">
         <el-input
           v-model="queryParams.stName"
           placeholder="请输入类型名"
@@ -19,7 +11,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
+      <el-form-item class="search-item" label="创建时间" prop="createTime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.createTime"
           type="date"
@@ -27,18 +19,11 @@
           placeholder="选择创建时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="更新时间" prop="updateTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.updateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择更新时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
+      <el-form-item class="search-item">
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+      </div>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -85,16 +70,10 @@
 
     <el-table v-loading="loading" :data="songtypeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="类型id" align="center" prop="stId" />
       <el-table-column label="类型名" align="center" prop="stName" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -116,7 +95,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

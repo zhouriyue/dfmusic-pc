@@ -1,19 +1,18 @@
 package com.ruoyi.business.service.impl;
 
 import java.util.List;
-
-import com.ruoyi.business.domain.Recharge;
-import com.ruoyi.business.mapper.RechargeMapper;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.ruoyi.business.mapper.RechargeMapper;
+import com.ruoyi.business.domain.Recharge;
 import com.ruoyi.business.service.IRechargeService;
 
 /**
- * 充值信息Service业务层处理
+ * 充值管理Service业务层处理
  * 
  * @author ruoyi
- * @date 2020-10-09
+ * @date 2020-11-16
  */
 @Service
 public class RechargeServiceImpl implements IRechargeService 
@@ -22,10 +21,10 @@ public class RechargeServiceImpl implements IRechargeService
     private RechargeMapper rechargeMapper;
 
     /**
-     * 查询充值信息
+     * 查询充值管理
      * 
-     * @param recId 充值信息ID
-     * @return 充值信息
+     * @param recId 充值管理ID
+     * @return 充值管理
      */
     @Override
     public Recharge selectRechargeById(Long recId)
@@ -34,10 +33,10 @@ public class RechargeServiceImpl implements IRechargeService
     }
 
     /**
-     * 查询充值信息列表
+     * 查询充值管理列表
      * 
-     * @param recharge 充值信息
-     * @return 充值信息
+     * @param recharge 充值管理
+     * @return 充值管理
      */
     @Override
     public List<Recharge> selectRechargeList(Recharge recharge)
@@ -46,9 +45,9 @@ public class RechargeServiceImpl implements IRechargeService
     }
 
     /**
-     * 新增充值信息
+     * 新增充值管理
      * 
-     * @param recharge 充值信息
+     * @param recharge 充值管理
      * @return 结果
      */
     @Override
@@ -59,9 +58,9 @@ public class RechargeServiceImpl implements IRechargeService
     }
 
     /**
-     * 修改充值信息
+     * 修改充值管理
      * 
-     * @param recharge 充值信息
+     * @param recharge 充值管理
      * @return 结果
      */
     @Override
@@ -72,9 +71,9 @@ public class RechargeServiceImpl implements IRechargeService
     }
 
     /**
-     * 批量删除充值信息
+     * 批量删除充值管理
      * 
-     * @param recIds 需要删除的充值信息ID
+     * @param recIds 需要删除的充值管理ID
      * @return 结果
      */
     @Override
@@ -84,9 +83,9 @@ public class RechargeServiceImpl implements IRechargeService
     }
 
     /**
-     * 删除充值信息信息
+     * 删除充值管理信息
      * 
-     * @param recId 充值信息ID
+     * @param recId 充值管理ID
      * @return 结果
      */
     @Override

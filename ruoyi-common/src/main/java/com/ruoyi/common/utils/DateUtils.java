@@ -3,6 +3,7 @@ package com.ruoyi.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -71,6 +72,23 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     public static final String parseDateToStr(final String format, final Date date)
     {
         return new SimpleDateFormat(format).format(date);
+    }
+
+    /**
+     * 获取连个date之间的天数
+     * @param start
+     * @param end
+     * @return
+     */
+    public static long computeDay(Date start,Date end) {
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(start);
+        long time1=cal.getTimeInMillis();
+        cal.setTime(end);
+        long time2=cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24);
+        long count = Long.parseLong(String.valueOf(between_days));
+        return count;
     }
 
     public static final Date dateTime(final String format, final String ts)
@@ -151,5 +169,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
+    }
+
+    public static String formatDate(Date date,String dfStr) {
+        SimpleDateFormat df = new SimpleDateFormat(dfStr);
+        return df.format(date);
     }
 }

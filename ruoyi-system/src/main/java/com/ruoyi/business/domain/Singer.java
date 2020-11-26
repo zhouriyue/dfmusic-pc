@@ -37,6 +37,10 @@ public class Singer extends BaseEntity
     @Excel(name = "年龄")
     private Integer year;
 
+    /** 头像 */
+    @Excel(name = "头像")
+    private String picture;
+
     /** 歌手类型 */
     @Excel(name = "歌手类型")
     private Integer sinType;
@@ -61,6 +65,9 @@ public class Singer extends BaseEntity
     @Excel(name = "mv数")
     private Integer mvNumber;
 
+    @Excel(name = "人气")
+    private Long humanQi;
+
     /** 详情 */
     private String detail;
 
@@ -75,6 +82,12 @@ public class Singer extends BaseEntity
 
     /** 演绎经历 */
     private String performingExp;
+
+    /** 当前名次 **/
+    private Integer curRank;
+
+    /** 上一名次 **/
+    private Integer lastRank;
 
     /** 删除标识符 */
     private Integer delFlag;
@@ -132,7 +145,15 @@ public class Singer extends BaseEntity
         this.sinType = sinType;
     }
 
-    public Integer getSinType() 
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public Integer getSinType()
     {
         return sinType;
     }
@@ -245,6 +266,30 @@ public class Singer extends BaseEntity
         return delTime;
     }
 
+    public Long getHumanQi() {
+        return humanQi;
+    }
+
+    public void setHumanQi(Long humanQi) {
+        this.humanQi = humanQi;
+    }
+
+    public Integer getCurRank() {
+        return curRank;
+    }
+
+    public void setCurRank(Integer curRank) {
+        this.curRank = curRank;
+    }
+
+    public Integer getLastRank() {
+        return lastRank;
+    }
+
+    public void setLastRank(Integer lastRank) {
+        this.lastRank = lastRank;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -254,16 +299,20 @@ public class Singer extends BaseEntity
             .append("sex", getSex())
             .append("year", getYear())
             .append("sinType", getSinType())
+                .append("picture", getPicture())
             .append("area", getArea())
             .append("songNumber", getSongNumber())
             .append("followerNumber", getFollowerNumber())
             .append("albumNumber", getAlbumNumber())
             .append("mvNumber", getMvNumber())
+            .append("humanQi", getHumanQi())
             .append("detail", getDetail())
             .append("influencePower", getInfluencePower())
             .append("certInfo", getCertInfo())
             .append("earlyExp", getEarlyExp())
             .append("performingExp", getPerformingExp())
+                .append("curRank", getCurRank())
+                .append("lastRank", getLastRank())
             .append("delFlag", getDelFlag())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())

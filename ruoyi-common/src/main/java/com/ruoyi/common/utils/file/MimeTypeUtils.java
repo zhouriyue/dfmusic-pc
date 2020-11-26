@@ -7,15 +7,15 @@ package com.ruoyi.common.utils.file;
  */
 public class MimeTypeUtils
 {
-    public static final String IMAGE_PNG = "image/png";
+    public static final String IMAGE_PNG = "images/png";
 
-    public static final String IMAGE_JPG = "image/jpg";
+    public static final String IMAGE_JPG = "images/jpg";
 
-    public static final String IMAGE_JPEG = "image/jpeg";
+    public static final String IMAGE_JPEG = "images/jpeg";
 
-    public static final String IMAGE_BMP = "image/bmp";
+    public static final String IMAGE_BMP = "images/bmp";
 
-    public static final String IMAGE_GIF = "image/gif";
+    public static final String IMAGE_GIF = "images/gif";
     
     public static final String[] IMAGE_EXTENSION = { "bmp", "gif", "jpg", "jpeg", "png" };
 

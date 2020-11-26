@@ -1,7 +1,10 @@
 package com.ruoyi.business.mapper;
 
 import java.util.List;
+
+import com.ruoyi.business.domain.Song;
 import com.ruoyi.business.domain.SongType;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 歌曲类型Mapper接口
@@ -58,4 +61,8 @@ public interface SongTypeMapper
      * @return 结果
      */
     public int deleteSongTypeByIds(Long[] stIds);
+
+    public List<Song> getTypeSong(@Param("stId") Long stId);
+
+    public List<SongType> deleteSongIdStId(SongType songType);
 }

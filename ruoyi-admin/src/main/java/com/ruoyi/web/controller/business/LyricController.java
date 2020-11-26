@@ -47,6 +47,16 @@ public class LyricController extends BaseController
     }
 
     /**
+     *
+     * @param lyrId
+     * @return
+     */
+    @GetMapping("/selectLyric/android")
+    public Lyric selectLyric(Long lyrId){
+        return lyricService.selectLyricById(lyrId);
+    }
+
+    /**
      * 导出歌词列表
      */
     @PreAuthorize("@ss.hasPermi('business:lyric:export')")

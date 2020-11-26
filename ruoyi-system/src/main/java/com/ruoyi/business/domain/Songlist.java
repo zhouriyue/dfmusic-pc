@@ -52,6 +52,10 @@ public class Songlist extends BaseEntity
     @Excel(name = "分享量")
     private Integer shareNumber;
 
+    /** 创建者 */
+    @Excel(name = "创建者")
+    private Long createById;
+
     /** 详情 */
     @Excel(name = "详情")
     private String detail;
@@ -66,7 +70,9 @@ public class Songlist extends BaseEntity
 
     /** 是否公开 */
     @Excel(name = "是否公开")
-    private String isPublic;
+    private Integer isPublic;
+
+    private Integer isOff;
 
     /** 删除时间 */
     private Date delTime;
@@ -182,16 +188,25 @@ public class Songlist extends BaseEntity
     {
         return sinId;
     }
-    public void setIsPublic(String isPublic) 
+    public void setIsPublic(Integer isPublic)
     {
         this.isPublic = isPublic;
     }
 
-    public String getIsPublic() 
+    public Integer getIsPublic()
     {
         return isPublic;
     }
-    public void setDelTime(Date delTime) 
+
+    public Integer getIsOff() {
+        return isOff;
+    }
+
+    public void setIsOff(Integer isOff) {
+        this.isOff = isOff;
+    }
+
+    public void setDelTime(Date delTime)
     {
         this.delTime = delTime;
     }
@@ -210,27 +225,33 @@ public class Songlist extends BaseEntity
         return delFlag;
     }
 
+    public Long getCreateById() {
+        return createById;
+    }
+
+    public void setCreateById(Long createById) {
+        this.createById = createById;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("slId", getSlId())
-            .append("slName", getSlName())
-            .append("coverPicture", getCoverPicture())
-            .append("slTitle", getSlTitle())
-            .append("playNumber", getPlayNumber())
-            .append("songNumber", getSongNumber())
-            .append("colNumber", getColNumber())
-            .append("commentsNumber", getCommentsNumber())
-            .append("shareNumber", getShareNumber())
-            .append("createBy", getCreateBy())
-            .append("detail", getDetail())
-            .append("isAlbum", getIsAlbum())
-            .append("sinId", getSinId())
-            .append("isPublic", getIsPublic())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .append("delTime", getDelTime())
-            .append("delFlag", getDelFlag())
-            .toString();
+        return "Songlist{" +
+                "slId=" + slId +
+                ", slName='" + slName + '\'' +
+                ", coverPicture='" + coverPicture + '\'' +
+                ", slTitle='" + slTitle + '\'' +
+                ", playNumber=" + playNumber +
+                ", songNumber=" + songNumber +
+                ", colNumber=" + colNumber +
+                ", commentsNumber=" + commentsNumber +
+                ", shareNumber=" + shareNumber +
+                ", createById=" + createById +
+                ", detail='" + detail + '\'' +
+                ", isAlbum=" + isAlbum +
+                ", sinId=" + sinId +
+                ", isPublic=" + isPublic +
+                ", delTime=" + delTime +
+                ", delFlag=" + delFlag +
+                '}';
     }
 }

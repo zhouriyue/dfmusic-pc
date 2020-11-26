@@ -12,10 +12,60 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="delTime"    column="del_time"    />
         <result property="delFlag"    column="del_flag"    />
+        <association property="songlist"    column="sl_id" javaType="Songlist" resultMap="SonglistResult" />
+        <association property="sysUser"    column="collect_by" javaType="SysUser" resultMap="SysUserResult" />
+    </resultMap>
+
+    <resultMap type="Songlist" id="SonglistResult">
+        <result property="slId"    column="sl_id"    />
+        <result property="slName"    column="sl_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="slTitle"    column="sl_title"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="colNumber"    column="col_number"    />
+        <result property="commentsNumber"    column="comments_number"    />
+        <result property="shareNumber"    column="share_number"    />
+        <result property="createById"    column="create_by_id"    />
+        <result property="detail"    column="detail"    />
+        <result property="isAlbum"    column="is_album"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="isPublic"    column="is_public"    />
+        <result property="isOff"    column="is_off"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
     </resultMap>
 
     <sql id="selectCollectionesVo">
-        select col_id, sl_id, collect_by, create_time, update_time, del_time, del_flag from collectiones
+        select col.col_id, col.sl_id, col.collect_by, col.create_time, col.update_time, col.del_time, col.del_flag,
+        sl.sl_id, sl.sl_name, sl.cover_picture, sl.sl_title, sl.play_number, sl.song_number,sl.col_number, sl.comments_number, sl.share_number, sl.create_by_id, sl.detail,sl.is_album, sl.sin_id, sl.is_public, sl.create_time, sl.update_time, sl.del_time, sl.del_flag,sl.is_off,
+        u.user_id, u.user_name, u.nick_name, u.email,u.avatar, u.phonenumber, u.sex, u.create_time
+        from collectiones col
+             left join songlist sl on col.sl_id = sl.sl_id
+             left join sys_user u on u.user_id = col.collect_by
     </sql>
 
     <select id="selectCollectionesList" parameterType="Collectiones" resultMap="CollectionesResult">
@@ -23,9 +73,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="colId != null "> and col_id = #{colId}</if>
             <if test="slId != null "> and sl_id = #{slId}</if>
-            <if test="collectBy != null "> and collect_by = #{collectBy}</if>
-            <if test="createTime != null "> and create_time = #{createTime}</if>
-            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+            <if test="wordKey != null "> and u.user_name like concat('%', #{wordKey}, '%')</if>
+            <if test="createTime != null "> and year(col.create_time) = year(#{createTime}) and month(col.create_time) = month(#{createTime}) and day(col.create_time) = day(#{createTime})</if>
         </where>
     </select>
     

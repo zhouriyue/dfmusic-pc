@@ -1,6 +1,15 @@
 import request from '@/utils/request'
 
 // 查询在线用户列表
+export function getOnlineNumber(query) {
+  return request({
+    url: '/monitor/online/getOnlineNumber',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询在线用户列表
 export function list(query) {
   return request({
     url: '/monitor/online/list',

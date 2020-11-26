@@ -1,5 +1,29 @@
 import request from '@/utils/request'
 
+// 查询歌曲的歌手
+export function searchSonglistKey(query) {
+  return request({
+    url: '/business/songlist/searchSonglistKey',
+    method: 'get',
+    params: query
+  })
+}
+// 查询歌曲的歌手
+export function selectSongSinger(query) {
+  return request({
+    url: '/business/singer/selectSongSinger',
+    method: 'get',
+    params: query
+  })
+}
+// 查询歌单列表
+export function selectSingerKey(query) {
+  return request({
+    url: '/business/singer/selectSingerKey',
+    method: 'get',
+    params: query
+  })
+}
 // 查询歌曲列表
 export function listSong(query) {
   return request({

@@ -7,22 +7,22 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            访客
+            用户
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="userTotal" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
+        <div class="card-panel-icon-wrapper man-number">
+          <svg-icon icon-class="man-number" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            消息
+            今日活动量
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="onlineNumber" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -48,7 +48,7 @@
           <div class="card-panel-text">
             订单
           </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="orderTotal" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -57,12 +57,36 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { getOrderTotal} from "@/api/business/order";
+import {getTodayActivityNumber } from "@/api/business/app_login_info";
+import {getTotalNumber} from "@/api/business/member";
 
 export default {
   components: {
     CountTo
   },
+  data(){
+    return{
+      orderTotal:0,
+      onlineNumber:0,
+      userTotal:0
+    }
+  },
+  created() {
+    this.getList()
+  },
   methods: {
+    getList(){
+      getOrderTotal().then(response => {
+        this.orderTotal = response.data;
+      });
+      getTodayActivityNumber().then(response => {
+        this.onlineNumber = response.data;
+      });
+      getTotalNumber().then(response => {
+        this.userTotal = response.data;
+      });
+    },
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }
@@ -102,6 +126,10 @@ export default {
         background: #36a3f7;
       }
 
+      .man-number {
+        background: #36a3f7;
+      }
+
       .icon-money {
         background: #f4516c;
       }
@@ -125,6 +153,9 @@ export default {
 
     .icon-shopping {
       color: #34bfa3
+    }
+    .man-number{
+      color: #36a3f7;
     }
 
     .card-panel-icon-wrapper {

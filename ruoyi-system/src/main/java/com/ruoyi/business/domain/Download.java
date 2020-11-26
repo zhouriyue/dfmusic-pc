@@ -2,6 +2,7 @@ package com.ruoyi.business.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -42,6 +43,10 @@ public class Download extends BaseEntity
 
     /** 删除标识符 */
     private Integer delFlag;
+
+    private SysUser sysUser;
+
+    private Song song;
 
     public void setDlId(Long dlId) 
     {
@@ -105,6 +110,22 @@ public class Download extends BaseEntity
     public Integer getDelFlag() 
     {
         return delFlag;
+    }
+
+    public SysUser getSysUser() {
+        return sysUser;
+    }
+
+    public void setSysUser(SysUser sysUser) {
+        this.sysUser = sysUser;
+    }
+
+    public Song getSong() {
+        return song;
+    }
+
+    public void setSong(Song song) {
+        this.song = song;
     }
 
     @Override

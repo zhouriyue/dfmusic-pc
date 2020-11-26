@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.UserOpenidMapper">
+    
+    <resultMap type="UserOpenid" id="UserOpenidResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="openid"    column="openid"    />
+        <result property="openType"    column="open_type"    />
+    </resultMap>
+
+    <sql id="selectUserOpenidVo">
+        select id, user_id, openid, open_type from user_openid
+    </sql>
+
+    <select id="selectUserOpenidList" parameterType="UserOpenid" resultMap="UserOpenidResult">
+        <include refid="selectUserOpenidVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
+            <if test="openType != null "> and open_type = #{openType}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserOpenidById" parameterType="Long" resultMap="UserOpenidResult">
+        <include refid="selectUserOpenidVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="findByOpenId" parameterType="String" resultMap="UserOpenidResult">
+        <include refid="selectUserOpenidVo"/>
+        where openid = #{openid}
+    </select>
+        
+    <insert id="insertUserOpenid" parameterType="UserOpenid" useGeneratedKeys="true" keyProperty="id">
+        insert into user_openid
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="openid != null">openid,</if>
+            <if test="openType != null">open_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="openid != null">#{openid},</if>
+            <if test="openType != null">#{openType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserOpenid" parameterType="UserOpenid">
+        update user_openid
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="openType != null">open_type = #{openType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserOpenidById" parameterType="Long">
+        delete from user_openid where id = #{id}
+    </delete>
+
+    <delete id="deleteUserOpenidByIds" parameterType="String">
+        delete from user_openid where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

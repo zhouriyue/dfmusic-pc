@@ -1,41 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="下载id" prop="dlId">
-        <el-input
-          v-model="queryParams.dlId"
-          placeholder="请输入下载id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户id" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="歌曲id" prop="songId">
-        <el-input
-          v-model="queryParams.songId"
-          placeholder="请输入歌曲id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="下载音质" prop="toneQuality">
+      <el-form-item label="搜索" prop="songId">
         <el-input
           v-model="queryParams.toneQuality"
-          placeholder="请输入下载音质"
+          placeholder="请输入歌曲名/用户名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item class="search-item" label="下载时间" prop="createTime">
+        <el-date-picker v-model="queryParams.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                        :style="{width: '100%'}" placeholder="请选择发行时间" clearable></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -44,7 +21,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <el-col :span="1.5" style="display: none;">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -87,14 +64,27 @@
 
     <el-table v-loading="loading" :data="downloadList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="下载id" align="center" prop="dlId" />
-      <el-table-column label="用户id" align="center" prop="userId" />
-      <el-table-column label="歌曲id" align="center" prop="songId" />
-      <el-table-column label="下载音质" align="center" prop="toneQuality" />
+      <el-table-column label="用户名" align="center" prop="sysUser.userName" />
+      <el-table-column label="歌曲名" align="center" prop="song.songName" />
+      <el-table-column label="歌单封面" width="80" align="center" prop="song.coverPicture">
+        <template slot-scope="scope">
+          <img :src="baseUrl+scope.row.song.coverPicture" alt="" style="width:60px;height:60px;">
+        </template>
+      </el-table-column>
+      <el-table-column label="下载音质" align="center" prop="toneQuality">
+        <template slot-scope="scope">
+          <span style="border: 1px solid red;padding: 1px;color: red;border-radius: 3px;">{{scope.row.toneQuality}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="下载时长" align="center" prop="dlLenght" />
+      <el-table-column label="下载时间" align="center" prop="createTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
+          <el-button style="display: none;"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -111,7 +101,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -151,6 +141,7 @@ export default {
   name: "Download",
   data() {
     return {
+      baseUrl: 'http://47.114.190.44',
       // 遮罩层
       loading: true,
       // 选中数组

@@ -94,4 +94,30 @@ public class MemberServiceImpl implements IMemberService
     {
         return memberMapper.deleteMemberById(mId);
     }
+
+    /**
+     * android 端
+     * 查询会员信息
+     * @param mId
+     * @return
+     */
+    @Override
+    public Member getMember(Long mId) {
+        return memberMapper.selectMemberById(mId);
+    }
+
+    /**
+     * 更新会员天数
+     * @param count
+     * @return
+     */
+    @Override
+    public long updateValidDay(Long mId,Long count) {
+        return memberMapper.updateValidDay(mId,count);
+    }
+
+    @Override
+    public long recharge(Long mId, Integer rechargeDay) {
+        return memberMapper.recharge(mId,rechargeDay);
+    }
 }

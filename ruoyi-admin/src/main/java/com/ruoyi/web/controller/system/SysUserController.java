@@ -1,8 +1,23 @@
 package com.ruoyi.web.controller.system;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import com.ruoyi.business.domain.UserOpenid;
+import com.ruoyi.business.domain.vo.UserDetailVo;
+import com.ruoyi.business.domain.vo.UserRegisterMess;
+import com.ruoyi.business.service.IUserOpenidService;
+import com.ruoyi.common.utils.file.FDFSUtils;
+import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.system.domain.SysUserRole;
+import org.apache.commons.fileupload.FileItem;
+import org.csource.fastdfs.TrackerClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +46,9 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户信息
@@ -41,6 +59,9 @@ import com.ruoyi.system.service.ISysUserService;
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController
 {
+    @Autowired
+    HttpServletRequest request;
+
     @Autowired
     private ISysUserService userService;
 
@@ -53,6 +74,26 @@ public class SysUserController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private IUserOpenidService userOpenidService;
+
+    @Value("common.fdfs-save-server")
+    public String FDFS_SAVE_PATH;
+
+    @Value("common.groups")
+    public String[] GROUPS;
+
+    @Autowired
+    TrackerClient trackerClient;
+
+    /**搜索用户**/
+    @GetMapping("/selectUser")
+    public TableDataInfo selectUser(SysUser user){
+        startPage();
+        List<SysUser> list = userService.selectUserList(user);
+        return getDataTable(list);
+    }
+
     /**
      * 获取用户列表
      */
@@ -63,6 +104,67 @@ public class SysUserController extends BaseController
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
+    }
+
+    /**
+     * 检查用户名是否存在
+     * @param username
+     * @return
+     */
+    @GetMapping("/checkUsername/android")
+    public String checkUsername(String username) {
+        return userService.checkUserNameUnique(username);
+    }
+
+    /**
+     * 一键登录
+     * 注册
+     * @param userRegisterMess
+     * @return
+     */
+    @PostMapping("/register/android")
+    public UserDetailVo registerUser(UserRegisterMess userRegisterMess){
+        SysUser user = new SysUser();
+        user.setUserName(userRegisterMess.getUserName());
+        user.setPassword(SecurityUtils.encryptPassword(userRegisterMess.getPassword()));
+        user.setNickName(userRegisterMess.getDisplayName());
+        String avator = uploadAvator(userRegisterMess.getAvatorUrl());
+        user.setAvatar(avator);
+        user.setCreateBy(userRegisterMess.getUserName());
+        SysRole sysRole = new SysRole();
+        sysRole.setRoleId(SysRole.MUSIC_USER);
+        Long[] sysRoles = new Long[1];
+        sysRoles[0] = sysRole.getRoleId();
+        user.setRoleIds(sysRoles);
+        userService.insertUser(user);
+
+        UserDetailVo userDetailVo = new UserDetailVo();
+        userDetailVo.setUserId(user.getUserId());
+        userService.insertUserDetail(userDetailVo);
+        userDetailVo.setUserDetailVo(user);
+
+        UserOpenid userOpenid = new UserOpenid();
+        userOpenid.setUserId(user.getUserId());
+        userOpenid.setOpenid(userRegisterMess.getOpenid());
+        userOpenidService.insertUserOpenid(userOpenid);
+        return userDetailVo;
+    }
+
+    private String uploadAvator(String avator){
+        String url = null;
+        try {
+            url = FDFSUtils.uploadPerPic(avator,trackerClient);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    @GetMapping("/getUserDetail/android")
+    public UserDetailVo getUserDetail(SysUser user)
+    {
+        UserDetailVo userDetailVo = userService.getUserDetail(user);
+        return userDetailVo;
     }
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
@@ -113,6 +215,13 @@ public class SysUserController extends BaseController
             ajax.put("roleIds", roleService.selectRoleListByUserId(userId));
         }
         return ajax;
+    }
+
+    @GetMapping("/getSysUser/android")
+    public SysUser getSysUser(Long userId)
+    {
+        SysUser sysUser = userService.selectUserById(userId);
+        return sysUser;
     }
 
     /**

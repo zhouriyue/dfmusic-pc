@@ -34,6 +34,74 @@ public class SingerController extends BaseController
     @Autowired
     private ISingerService singerService;
 
+    /** 获取歌手首个字的拼音的歌手**/
+    @GetMapping(value = "/selectFristPySinName")
+    public TableDataInfo selectFristPySinName(String fristPy){
+        System.out.println(fristPy);
+        return getDataTable(singerService.selectFristPySinName(fristPy));
+    }
+
+    /** 获取歌手的所有专辑**/
+    @GetMapping(value = "/selectSingerAlbum")
+    public TableDataInfo selectSingerAlbum(Long sinId){
+        return getDataTable(singerService.selectSingerAlbum(sinId));
+    }
+
+    /**
+     * 歌手详情
+     * @param sinId
+     * @return
+     */
+    @GetMapping(value = "/selectSingerDetail")
+    public AjaxResult selectSingerDetail(Long sinId){
+        return AjaxResult.success(singerService.selectSingerDetail(sinId));
+    }
+
+    /** 获取歌手排名 **/
+    @GetMapping("/selectRankAll")
+    public TableDataInfo selectRankAll(){
+        List<Singer> singerList = singerService.selectRankAll();
+        for(int i = 0;i < singerList.size();i++) {
+            Singer singer = singerList.get(i);
+            if(singer.getCurRank()==0) {
+                singer.setCurRank(i+1);
+                singerService.updateSinger(singer);
+            } else {
+                if(singer.getCurRank()!=i+1) {
+                    singer.setLastRank(singer.getCurRank());
+                    singer.setCurRank(i+1);
+                    singerService.updateSinger(singer);
+                }
+            }
+        }
+        return getDataTable(singerList);
+    }
+
+    /** 获取歌手排名 **/
+    @GetMapping("/selectSingerRank")
+    public TableDataInfo selectSingerRank(){
+        List<Singer> singerList = singerService.selectSingerRank();
+        for(int i = 0;i < singerList.size();i++) {
+            Singer singer = singerList.get(i);
+            if(singer.getCurRank()==0) {
+                singer.setCurRank(i+1);
+                singerService.updateSinger(singer);
+            } else {
+                if(singer.getCurRank()!=i+1) {
+                    singer.setLastRank(singer.getCurRank());
+                    singer.setCurRank(i+1);
+                    singerService.updateSinger(singer);
+                }
+            }
+        }
+        return getDataTable(singerList);
+    }
+
+    @GetMapping("selectSingerKey")
+    public List<Singer> selectSingerKey(String key){
+        return singerService.selectSingerKey(key);
+    }
+
     /**
      * 查询歌手信息列表
      */

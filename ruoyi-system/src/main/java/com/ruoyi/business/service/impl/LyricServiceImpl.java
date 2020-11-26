@@ -94,4 +94,5 @@ public class LyricServiceImpl implements ILyricService
     {
         return lyricMapper.deleteLyricById(lyrId);
     }
+
 }

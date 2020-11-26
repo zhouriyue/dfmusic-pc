@@ -3,6 +3,7 @@ package com.ruoyi.business.service.impl;
 import java.util.List;
 
 import com.ruoyi.business.domain.Singer;
+import com.ruoyi.business.domain.Songlist;
 import com.ruoyi.business.mapper.SingerMapper;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,5 +94,40 @@ public class SingerServiceImpl implements ISingerService
     public int deleteSingerById(Long sinId)
     {
         return singerMapper.deleteSingerById(sinId);
+    }
+
+    @Override
+    public List<Singer> selectSingerKey(String key) {
+        int sinId = 0;
+        System.out.println(key+",true="+key.matches("[0-9]+"));
+        if(key.matches("[0-9]+")){
+            sinId = Integer.parseInt(key);
+        }
+        return singerMapper.selectSingerKey(sinId,key);
+    }
+
+    @Override
+    public List<Singer> selectSingerRank() {
+        return singerMapper.selectSingerRank();
+    }
+
+    @Override
+    public List<Singer> selectRankAll() {
+        return singerMapper.selectRankAll();
+    }
+
+    @Override
+    public Singer selectSingerDetail(Long sinId) {
+        return singerMapper.selectSingerDetail(sinId);
+    }
+
+    @Override
+    public List<Songlist> selectSingerAlbum(Long sinId) {
+        return singerMapper.selectSingerAlbum(sinId);
+    }
+
+    @Override
+    public List<Singer> selectFristPySinName(String fristPy) {
+        return singerMapper.selectFristPySinName(fristPy);
     }
 }

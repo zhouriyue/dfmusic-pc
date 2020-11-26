@@ -59,6 +59,16 @@ public class BaseController
         }
     }
 
+    protected void startPage(Integer pageNum,Integer pageSize)
+    {
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize))
+        {
+            String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
+            PageHelper.startPage(pageNum, pageSize, orderBy);
+        }
+    }
+
     /**
      * 响应请求分页数据
      */
@@ -71,6 +81,17 @@ public class BaseController
         rspData.setRows(list);
         rspData.setTotal(new PageInfo(list).getTotal());
         return rspData;
+    }
+
+    /**
+     * 响应返回结果
+     *
+     * @param rows 影响行数
+     * @return 操作结果
+     */
+    protected AjaxResult toAjax(int rows,Long id)
+    {
+        return rows > 0 ? AjaxResult.success(id) : AjaxResult.error();
     }
 
     /**

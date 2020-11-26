@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.RankingListMapper">
+    
+    <resultMap type="RankingList" id="RankingListResult">
+        <result property="rlId"    column="rl_id"    />
+        <result property="rlName"    column="rl_name"    />
+        <result property="isOff"    column="is_off"    />
+        <result property="slPicture"    column="sl_picture"    />
+        <result property="rlType"    column="rl_type"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="detail"    column="detail"    />
+    </resultMap>
+
+    <resultMap type="RankingList" id="RankingSongListResult">
+        <result property="rlId"    column="rl_id"    />
+        <result property="rlName"    column="rl_name"    />
+        <result property="isOff"    column="is_off"    />
+        <result property="slPicture"    column="sl_picture"    />
+        <result property="rlType"    column="rl_type"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="detail"    column="detail"    />
+        <collection  property="songList"   javaType="java.util.List" resultMap="SongResult"/>
+    </resultMap>
+
+    <resultMap type="Song" id="SongResult">
+        <result property="songId"    column="song_id"    />
+        <result property="songName"    column="song_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="duration"    column="duration"    />
+        <result property="issuingDate"    column="issuing_date"    />
+        <result property="mvUrl"    column="mv_url"    />
+        <result property="isCharge"    column="is_charge"    />
+        <result property="isCopyright"    column="is_copyright"    />
+        <result property="isSingle"    column="is_single"    />
+        <result property="slId"    column="sl_id"    />
+        <result property="standardUrl"    column="standard_url"    />
+        <result property="hqUrl"    column="hq_url"    />
+        <result property="sqUrl"    column="sq_url"    />
+        <result property="witPreUrl"    column="wit_pre_url"    />
+        <result property="lyrId"    column="lyr_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="todayPlay"    column="today_play"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="isOriginal"    column="is_original"    />
+        <association property="songlistes"    column="sl_id" javaType="songlist" resultMap="SonglistResult" />
+        <collection  property="singerList"   javaType="java.util.List" resultMap="SingerResult"/>
+    </resultMap>
+
+    <resultMap type="Songlist" id="SonglistResult">
+        <result property="slId"    column="sl_id"    />
+        <result property="slName"    column="sl_name"    />
+        <result property="coverPicture"    column="cover_picture"    />
+        <result property="slTitle"    column="sl_title"    />
+        <result property="playNumber"    column="play_number"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="colNumber"    column="col_number"    />
+        <result property="commentsNumber"    column="comments_number"    />
+        <result property="shareNumber"    column="share_number"    />
+        <result property="createById"    column="create_by_id"    />
+        <result property="detail"    column="detail"    />
+        <result property="isAlbum"    column="is_album"    />
+        <result property="sinId"    column="sin_id"    />
+        <result property="isPublic"    column="is_public"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="Singer" id="SingerResult">
+        <result property="sinId"    column="sin_id"    />
+        <result property="sinName"    column="sin_name"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="sex"    column="sex"    />
+        <result property="year"    column="year"    />
+        <result property="sinType"    column="sin_type"    />
+        <result property="area"    column="area"    />
+        <result property="songNumber"    column="song_number"    />
+        <result property="followerNumber"    column="follower_number"    />
+        <result property="albumNumber"    column="album_number"    />
+        <result property="mvNumber"    column="mv_number"    />
+        <result property="detail"    column="detail"    />
+        <result property="influencePower"    column="influence_power"    />
+        <result property="certInfo"    column="cert_info"    />
+        <result property="earlyExp"    column="early_exp"    />
+        <result property="performingExp"    column="performing_exp"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delTime"    column="del_time"    />
+    </resultMap>
+
+    <sql id="selectRankingListVo">
+        select rl_id, rl_name, is_off, sl_picture, rl_type,create_date,play_number,detail from ranking_list
+    </sql>
+
+    <sql id="selectRankingSingerVo">
+        select s.song_id, s.song_name,s.cover_picture, s.sin_id, s.duration, s.issuing_date,
+        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.sl_id, s.standard_url, s.hq_url,
+        s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time, s.del_flag,
+        s.today_play,s.play_number,s.is_original,
+        sr.sin_id, sr.sin_name, sr.nickname, sr.sex, sr.year, sr.sin_type, sr.area,
+        sr.song_number, sr.follower_number, sr.album_number, sr.mv_number,sr.human_qi,
+        sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,
+        sr.del_flag, sr.create_time, sr.update_time, sr.del_time,sr.cur_rank,sr.last_rank,sr.picture,sl.sl_name
+        from song s
+              left join song_singer ssr on ssr.song_id=s.song_id
+              left join singer sr on ssr.sin_id=sr.sin_id
+              left join song_songlist ssli on ssli.song_id=s.song_id
+              left join songlist sl on sl.sl_id=ssli.sl_id
+              left join song_songtype sst on s.song_id = sst.song_id
+              left join ranking_list rl on rl.rl_type = sst.st_id
+    </sql>
+
+    <select id="selectRankingListList" parameterType="RankingList" resultMap="RankingListResult">
+        <include refid="selectRankingListVo"/>
+        <where>  
+            <if test="rlName != null  and rlName != ''"> and rl_name like concat('%', #{rlName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectRankingListById" parameterType="Long" resultMap="RankingListResult">
+        <include refid="selectRankingListVo"/>
+        where rl_id = #{rlId}
+    </select>
+
+    <select id="getOffRankingList" resultMap="RankingListResult">
+        <include refid="selectRankingListVo"/>
+        where is_off = 1
+    </select>
+
+    <!--获取全球榜音乐-->
+    <select id="getNotOff" resultMap="RankingListResult">
+        <include refid="selectRankingListVo"/>
+        where is_off = 0
+    </select>
+
+    <!--获取全球榜歌曲-->
+    <select id="getWorldSong"  parameterType="Integer" resultMap="SongResult">
+        <include refid="selectRankingSingerVo"/>
+        WHERE ssli.is_album=1 and rl.rl_type = #{rlType}
+        ORDER BY s.play_number desc LIMIT 0,50
+    </select>
+
+    <insert id="insertRankingList" parameterType="RankingList">
+        insert into ranking_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rlId != null">rl_id,</if>
+            <if test="rlName != null">rl_name,</if>
+            <if test="isOff != null">is_off,</if>
+            <if test="slPicture != null">sl_picture,</if>
+            <if test="rlType != null">rl_type,</if>
+            <if test="detail != null">detail</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rlId != null">#{rlId},</if>
+            <if test="rlName != null">#{rlName},</if>
+            <if test="isOff != null">#{isOff},</if>
+            <if test="slPicture != null">#{slPicture},</if>
+            <if test="rlType != null">#{rlType},</if>
+            <if test="detail != null">#{detail},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRankingList" parameterType="RankingList">
+        update ranking_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rlName != null">rl_name = #{rlName},</if>
+            <if test="isOff != null">is_off = #{isOff},</if>
+            <if test="slPicture != null">sl_picture = #{slPicture},</if>
+            <if test="rlType != null">rl_type = #{rlType},</if>
+            <if test="detail != null">detail = #{detail},</if>
+        </trim>
+        where rl_id = #{rlId}
+    </update>
+
+    <delete id="deleteRankingListById" parameterType="Long">
+        delete from ranking_list where rl_id = #{rlId}
+    </delete>
+
+    <delete id="deleteRankingListByIds" parameterType="String">
+        delete from ranking_list where rl_id in 
+        <foreach item="rlId" collection="array" open="(" separator="," close=")">
+            #{rlId}
+        </foreach>
+    </delete>
+    
+</mapper>

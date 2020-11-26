@@ -2,8 +2,7 @@ package com.ruoyi.web.controller.business;
 
 import java.util.List;
 
-import com.ruoyi.business.domain.Recharge;
-import com.ruoyi.business.service.IRechargeService;
+import com.ruoyi.business.service.IMemberService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +17,16 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.business.domain.Recharge;
+import com.ruoyi.business.service.IRechargeService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 充值信息Controller
+ * 充值管理Controller
  * 
  * @author ruoyi
- * @date 2020-10-09
+ * @date 2020-11-16
  */
 @RestController
 @RequestMapping("/business/recharge")
@@ -34,8 +35,11 @@ public class RechargeController extends BaseController
     @Autowired
     private IRechargeService rechargeService;
 
+    @Autowired
+    private IMemberService memberService;
+
     /**
-     * 查询充值信息列表
+     * 查询充值管理列表
      */
     @PreAuthorize("@ss.hasPermi('business:recharge:list')")
     @GetMapping("/list")
@@ -47,10 +51,10 @@ public class RechargeController extends BaseController
     }
 
     /**
-     * 导出充值信息列表
+     * 导出充值管理列表
      */
     @PreAuthorize("@ss.hasPermi('business:recharge:export')")
-    @Log(title = "充值信息", businessType = BusinessType.EXPORT)
+    @Log(title = "充值管理", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(Recharge recharge)
     {
@@ -60,7 +64,7 @@ public class RechargeController extends BaseController
     }
 
     /**
-     * 获取充值信息详细信息
+     * 获取充值管理详细信息
      */
     @PreAuthorize("@ss.hasPermi('business:recharge:query')")
     @GetMapping(value = "/{recId}")
@@ -70,21 +74,23 @@ public class RechargeController extends BaseController
     }
 
     /**
-     * 新增充值信息
+     * 新增充值管理
      */
     @PreAuthorize("@ss.hasPermi('business:recharge:add')")
-    @Log(title = "充值信息", businessType = BusinessType.INSERT)
+    @Log(title = "充值管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Recharge recharge)
     {
-        return toAjax(rechargeService.insertRecharge(recharge));
+        int count = rechargeService.insertRecharge(recharge);
+        memberService.recharge(recharge.getmId(),recharge.getRechargeDay());
+        return toAjax(count);
     }
 
     /**
-     * 修改充值信息
+     * 修改充值管理
      */
     @PreAuthorize("@ss.hasPermi('business:recharge:edit')")
-    @Log(title = "充值信息", businessType = BusinessType.UPDATE)
+    @Log(title = "充值管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Recharge recharge)
     {
@@ -92,10 +98,10 @@ public class RechargeController extends BaseController
     }
 
     /**
-     * 删除充值信息
+     * 删除充值管理
      */
     @PreAuthorize("@ss.hasPermi('business:recharge:remove')")
-    @Log(title = "充值信息", businessType = BusinessType.DELETE)
+    @Log(title = "充值管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{recIds}")
     public AjaxResult remove(@PathVariable Long[] recIds)
     {

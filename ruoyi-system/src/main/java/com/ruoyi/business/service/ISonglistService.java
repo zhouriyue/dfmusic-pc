@@ -1,7 +1,12 @@
 package com.ruoyi.business.service;
 
+import com.ruoyi.business.domain.Song;
+import com.ruoyi.business.domain.SongSonglist;
 import com.ruoyi.business.domain.Songlist;
+import com.ruoyi.business.domain.vo.SonglistdetailVo;
+import com.ruoyi.common.core.domain.entity.SysUser;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,4 +64,36 @@ public interface ISonglistService
      * @return 结果
      */
     public int deleteSonglistById(Long slId);
+    public int deleteSonglisSong(Long slId);
+
+    /**
+     * 获取歌单歌曲
+     * @param slId
+     * @return
+     */
+    public List<Song> selectSongList(Long slId);
+
+    /**
+     * 添加歌曲到歌单
+     * @param slId
+     * @param songId
+     */
+    public int addToSonglist(Long slId,Long songId);
+
+    public SongSonglist selectSonglistSong(Long slId, Long songId);
+
+    public List<Song> getIndexSong(Integer slId);
+
+    public List<SonglistdetailVo> getSonglistDetail(Songlist songlist);
+
+    public long deleteSonglistSong(Long slId,Long songId);
+
+    /** 获取歌曲详情 **/
+    public List<Song> selectSongDetail(Long slId);
+
+    public SysUser selectUserSonglist(Long slId);
+
+    public List<Songlist> searchSonglist(String wordKey, Date createTime, Integer isAlbum);
+
+    public Long addSongToSl(Long slId,Integer isAlbum,Long[] songIds);
 }

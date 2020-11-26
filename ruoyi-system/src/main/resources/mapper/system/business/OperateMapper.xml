@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.OperateMapper">
+
+    <resultMap type="Operate" id="OperateResult">
+        <result property="id"    column="id"    />
+        <result property="oId"    column="o_id"    />
+        <result property="oName"    column="o_name"    />
+        <result property="icon"    column="icon"    />
+        <result property="type"    column="type"    />
+        <result property="path"    column="path"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <resultMap type="TypeOperate" id="TypeOperateResult">
+        <result property="tId"    column="t_id"    />
+        <result property="type"    column="type"    />
+        <result property="id"    column="id"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectOperateVo">
+        select o.id, o.o_id,o.o_name, o.icon, tyo.type,tyo.update_date
+        from operate o,type_operate tyo
+    </sql>
+
+
+    <sql id="selectTypeOperateVo">
+        select t_id,`type`,id,update_date
+        from type_operate
+    </sql>
+    <select id="findAll" resultMap="OperateResult">
+        <include refid="selectOperateVo"/>
+    </select>
+
+    <select id="selectType" parameterType="Integer" resultMap="OperateResult">
+        <include refid="selectOperateVo"/>
+        where o.id = tyo.id and tyo.type=#{type}
+    </select>
+
+    <select id="findAllType" resultMap="TypeOperateResult">
+        <include refid="selectTypeOperateVo"/>
+    </select>
+</mapper>

@@ -1,5 +1,6 @@
 package com.ruoyi.business.service;
 
+import com.ruoyi.business.domain.Song;
 import com.ruoyi.business.domain.SongType;
 
 import java.util.List;
@@ -59,4 +60,7 @@ public interface ISongTypeService
      * @return 结果
      */
     public int deleteSongTypeById(Long stId);
+
+    public List<Song> getTypeSong(Long stId);
+
 }

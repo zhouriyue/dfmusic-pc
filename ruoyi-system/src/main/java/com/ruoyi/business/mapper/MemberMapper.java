@@ -2,6 +2,7 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.Member;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 会员信息管理Mapper接口
@@ -58,4 +59,13 @@ public interface MemberMapper
      * @return 结果
      */
     public int deleteMemberByIds(Long[] mIds);
+
+    /**
+     * 更新会员天数
+     * @param count
+     * @return
+     */
+    public long updateValidDay(@Param("mId") Long mId,@Param("count") Long count);
+
+    public long recharge(@Param("mId") Long mId,@Param("rechargeDay") Integer rechargeDay);
 }

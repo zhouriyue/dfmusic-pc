@@ -1,7 +1,14 @@
 package com.ruoyi.business.mapper;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.business.domain.Song;
+import com.ruoyi.business.domain.SongSonglist;
 import com.ruoyi.business.domain.Songlist;
+import com.ruoyi.business.domain.vo.SonglistdetailVo;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 歌单Mapper接口
@@ -58,4 +65,36 @@ public interface SonglistMapper
      * @return 结果
      */
     public int deleteSonglistByIds(Long[] slIds);
+
+    /**
+     * 歌单歌曲
+     * @param slId
+     * @return
+     */
+    public List<Song> selectSongList(Long slId);
+
+    /**
+     * 添加歌曲到歌单
+     * @param slId
+     * @param songId
+     */
+    public int addToSonglist(@Param("slId")Long slId, @Param("songId")Long songId);
+
+    public SongSonglist selectSonglistSong(@Param("slId")Long slId, @Param("songId")Long songId);
+
+    public List<Song> getIndexSong(Integer slId);
+
+    public List<SonglistdetailVo> getSonglistDetail(Songlist songlist);
+
+    public long deleteSonglistSong(@Param("slId") Long slId,@Param("songId") Long songId);
+
+    public List<Song> selectSongDetail(Long slId);
+
+    public SysUser selectUserSonglist(Long slId);
+
+    public List<Songlist> searchSonglist(@Param("wordKey") String wordKey,@Param("createTime") Date createTime,@Param("isAlbum") Integer isAlbum);
+
+    public Long addSongToSl(@Param("slId") Long slId,@Param("isAlbum") Integer isAlbum,@Param("songIds") Long[] songIds);
+
+    public Long deleteSonglisSong(Long slId);
 }

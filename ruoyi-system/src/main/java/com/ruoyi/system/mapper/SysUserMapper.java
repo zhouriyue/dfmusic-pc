@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import com.ruoyi.business.domain.vo.UserDetailVo;
 import org.apache.ibatis.annotations.Param;
 import com.ruoyi.common.core.domain.entity.SysUser;
 
@@ -108,4 +110,13 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
+
+    public UserDetailVo getUserDetail(SysUser sysUser);
+
+    public long insertUserDetail(UserDetailVo userDetailVo);
+
+    /**获取总用户数**/
+    public Long getTotalNumber();
+
+    public Long userChangeMember(Long userId);
 }
