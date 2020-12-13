@@ -45,6 +45,15 @@ public class SongController extends BaseController
     private ISongSongtypeService songSongtypeService;
 
     /**
+     * 获取当天热门歌曲
+     * @return
+     */
+    @GetMapping("/selectTodeyHot/android")
+    public List<Song> selectTodeyHot(Integer pageNum,Integer size){
+        return songService.selectTodeyHot(0,10);
+    }
+
+    /**
      * 获取原创歌曲
      * @return
      */
@@ -203,6 +212,22 @@ public class SongController extends BaseController
             }
         }
         return toAjax(count);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:song:off')")
+    @Log(title = "歌曲", businessType = BusinessType.UPDATE)
+    @PutMapping("/offSong")
+    public AjaxResult offSong(@RequestBody Song song)
+    {
+        return toAjax(songService.updateSong(song));
+    }
+
+    /** 上下架歌手**/
+    @PreAuthorize("@ss.hasPermi('business:song:offs')")
+    @PutMapping("/offSongs")
+    public AjaxResult offSongs(@RequestBody Song song){
+        System.out.println(song.toString());
+        return toAjax(songService.offSongs(song));
     }
 
     /**

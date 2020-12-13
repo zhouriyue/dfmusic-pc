@@ -98,6 +98,11 @@ public class SongServiceImpl implements ISongService
     }
 
     @Override
+    public int offSongs(Song song) {
+        return songMapper.offSongs(song);
+    }
+
+    @Override
     public List<Song> selectSongKey(String wordKey) {
         return songMapper.selectSongKey(wordKey);
     }
@@ -130,5 +135,15 @@ public class SongServiceImpl implements ISongService
     @Override
     public List<Song> getHotSong() {
         return songMapper.getHotSong();
+    }
+
+    @Override
+    public List<Song> selectHotSong(int pageNum, int size) {
+        return songMapper.selectHotSong(pageNum,size);
+    }
+
+    @Override
+    public List<Song> selectTodeyHot(int pageNum, int size) {
+        return songMapper.selectTodeyHot(pageNum,size);
     }
 }

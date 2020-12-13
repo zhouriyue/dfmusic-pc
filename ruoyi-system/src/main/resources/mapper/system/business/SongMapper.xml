@@ -28,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isOriginal"    column="is_original"    />
         <result property="timbreType"    column="timbre_type"    />
         <result property="lyrUrl"    column="lyr_url"    />
+        <result property="detail"    column="detail"    />
         <association property="songlistes"    javaType="songlist" resultMap="SonglistResult" />
         <collection  property="singerList"   column="sin_id" javaType="java.util.List" resultMap="SingerResult"/>
         <collection  property="songTypeList"   column="st_id" javaType="java.util.List" resultMap="SongTypeResult"/>
@@ -119,18 +120,36 @@ GROUP BY s.song_id,sr.sin_id) d
     <!--获取排行榜的歌曲，信息包含歌手、专辑、类型-->
     <sql id="selectRankingSingerVo">
         select s.song_id, s.song_name,s.cover_picture,s.duration, s.issuing_date,
-        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.sl_id, s.standard_url, s.hq_url,
+        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.standard_url, s.hq_url,
         s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time, s.del_flag,
-        s.today_play,s.play_number,s.is_original,s.lyr_url,s.timbre_type,
+        s.today_play,s.play_number,s.is_original,s.lyr_url,s.timbre_type,s.detail,
         sr.sin_id, sr.sin_name, sr.nickname, sr.sex, sr.year, sr.sin_type, sr.area,
         sr.song_number, sr.follower_number, sr.album_number, sr.mv_number,sr.human_qi,
-        sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,sr.update_time, sr.del_time,sr.cur_rank,sr.last_rank,sr.picture,sl.sl_name
+        sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,sr.update_time, sr.del_time,sr.cur_rank,sr.last_rank,sr.picture,
+        sl.sl_id,sl.sl_name
         from song s
               left join song_singer ssr on ssr.song_id=s.song_id
               left join singer sr on ssr.sin_id=sr.sin_id
               left join song_songlist ssli on ssli.song_id=s.song_id
               left join songlist sl on sl.sl_id=ssli.sl_id
               left join song_songtype sst on s.song_id = sst.song_id
+    </sql>
+
+    <!--获取排行榜的歌曲，信息包含歌手、专辑、类型-->
+    <sql id="selectSongAndSingerVo">
+        select s.song_id, s.song_name,s.cover_picture,s.duration, s.issuing_date,
+        s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.standard_url, s.hq_url,
+        s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time, s.del_flag,
+        s.today_play,s.play_number,s.is_original,s.lyr_url,s.timbre_type,s.detail,
+        sr.sin_id, sr.sin_name, sr.nickname, sr.sex, sr.year, sr.sin_type, sr.area,
+        sr.song_number, sr.follower_number, sr.album_number, sr.mv_number,sr.human_qi,
+        sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,sr.update_time, sr.del_time,sr.cur_rank,sr.last_rank,sr.picture,
+        sl.sl_id,sl.sl_name
+        from song s
+              left join song_singer ssr on ssr.song_id=s.song_id
+              left join singer sr on ssr.sin_id=sr.sin_id
+              left join song_songlist ssli on ssli.song_id=s.song_id
+              left join songlist sl on sl.sl_id=ssli.sl_id
     </sql>
 
     <sql id="SongToSonglist">
@@ -236,6 +255,21 @@ where d.song_id = #{songId}
         ORDER BY s.play_number desc LIMIT 0,50
     </select>
 
+    <!--获取热门歌曲-->
+    <select id="selectHotSong" resultMap="SongResult">
+        <include refid="selectSongAndSingerVo"/>
+        GROUP BY s.song_id
+        ORDER BY s.play_number desc
+        LIMIT #{pageNum},#{size}
+    </select>
+
+    <select id="selectTodeyHot" resultMap="SongResult">
+        <include refid="selectSongAndSingerVo"/>
+        GROUP BY s.song_id
+        ORDER BY s.play_number desc
+        LIMIT #{pageNum},#{size}
+    </select>
+
     <insert id="insertSong" parameterType="Song" useGeneratedKeys="true" keyProperty="songId">
         insert into song
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -312,6 +346,17 @@ where d.song_id = #{songId}
             <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where song_id = #{songId}
+    </update>
+
+    <update id="offSongs" parameterType="Song">
+        update song
+        <trim prefix="SET" suffixOverrides=",">
+        <if test="isCopyright != null">is_copyright = #{isCopyright}</if>
+        </trim>
+        where song_id in
+        <foreach item="songId" collection="songIds" open="(" separator="," close=")">
+            #{songId}
+        </foreach>
     </update>
 
     <delete id="deleteSongById" parameterType="Long">

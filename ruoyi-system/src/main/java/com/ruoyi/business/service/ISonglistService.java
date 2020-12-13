@@ -96,4 +96,7 @@ public interface ISonglistService
     public List<Songlist> searchSonglist(String wordKey, Date createTime, Integer isAlbum);
 
     public Long addSongToSl(Long slId,Integer isAlbum,Long[] songIds);
+
+    /** 获取热门歌单 **/
+    public List<Songlist> getHotSonglist(int pageNum,int size);
 }

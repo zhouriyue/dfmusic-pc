@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import logoImg from '@/assets/logo/logo.png'
+import logoImg from '@/assets/logo/df-logo.png'
 
 export default {
   name: 'SidebarLogo',
@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '若依管理系统',
+      title: '多芬音乐数据管理平台',
       logo: logoImg
     }
   }

@@ -3,6 +3,7 @@ package com.ruoyi.business.mapper;
 import java.util.List;
 import com.ruoyi.business.domain.RankingList;
 import com.ruoyi.business.domain.Song;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 排行榜管理Mapper接口
@@ -65,4 +66,6 @@ public interface RankingListMapper
     public List<RankingList> getNotOff();
 
     public List<Song> getWorldSong(Integer rlType);
+
+    public List<RankingList> getHotRankingList(@Param("pageNum") int pageNum,@Param("size") int size);
 }

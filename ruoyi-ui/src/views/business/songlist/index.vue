@@ -79,14 +79,107 @@
             <div class="top-right-btn">
               <el-row>
                 <el-tooltip class="item" effect="dark" :content="showType ? '切换到数据列表' : '切换到一览表'" placement="top">
-                  <el-button size="mini" circle icon="el-icon-sort" @click="changeShowType()" />
+                  <el-button size="mini" circle icon="el-icon-sort" @click="changeShowType()"/>
                 </el-tooltip>
               </el-row>
             </div>
           </div>
         </el-row>
         <!--列表显示-->
-        <el-table v-loading="loading" :data="songlistList" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading"
+                  :data="songlistList"
+                  type='index'
+                  :row-key='getRowKeys'
+                  :expand-row-keys="expands"
+                  style="width: 100%"
+                  :default-sort = "{prop: 'payment_date', order: 'descending'}"
+                  @selection-change="handleSelectionChange"
+                  @expand-change="handleExpendRow">
+          <el-table-column label="展开" type="expand">
+            <template slot-scope="props" style="background-color: #fbfbfb;">
+              <el-row :gutter="32">
+                <el-col :xs="24" :sm="24" :lg="24">
+                  <div class="song-list">
+                    <div class="song-tag-title">
+                      <el-row :gutter="32">
+                        <el-col :xs="24" :sm="24" :lg="3">
+                          <span>序号</span>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :lg="12">
+                          <span>音乐标题</span>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :lg="3">
+                          <span>歌手</span>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :lg="3">
+                          <span>专辑</span>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :lg="3">
+                          <span>时长</span>
+                        </el-col>
+                      </el-row>
+                    </div>
+                    <div v-for="(song,index) in songList">
+                      <div class="song-itme" v-if="index%2==0">
+                        <el-row :gutter="32">
+                          <el-col :xs="24" :sm="24" :lg="3">
+                            <span>{{index+1}}</span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="12">
+                            <span>
+                              {{song.songName}}
+                            <span style="border: 1px solid red;padding: 1px;color: red;border-radius: 3px;font-size: 8px;"
+                                  v-if="song.timbreType==2">HQ</span>
+                            <span style="border: 1px solid red;padding: 1px;color: red;border-radius: 3px;font-size: 8px;"
+                                  v-if="song.timbreType==3">SQ</span>
+                            </span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="3">
+                        <span v-for="(singer,index) in song.singerList">
+                           {{singer.sinName}}
+                        </span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="3">
+                            <span>{{song.songlistes.slName}}</span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="3">
+                            <span>{{parseInt(song.duration/60)}}:{{parseInt(song.duration%60)}}</span>
+                          </el-col>
+                        </el-row>
+                      </div>
+                      <div class="song-itme-w" v-if="index%2!=0">
+                        <el-row :gutter="32">
+                          <el-col :xs="24" :sm="24" :lg="3">
+                            <span>{{index+1}}</span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="12">
+                            <span>{{song.songName}}
+                            <span style="border: 1px solid red;padding: 1px;color: red;border-radius: 3px;font-size: 8px;"
+                                  v-if="song.timbreType==2">HQ</span>
+                            <span style="border: 1px solid red;padding: 1px;color: red;border-radius: 3px;font-size: 8px;"
+                                  v-if="song.timbreType==3">SQ</span>
+                            </span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="3">
+                        <span v-for="(singer,index) in song.singerList">
+                           {{singer.sinName}}
+                        </span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="3">
+                            <span>{{song.songlistes.slName}}</span>
+                          </el-col>
+                          <el-col :xs="24" :sm="24" :lg="3">
+                            <span>{{parseInt(song.duration/60)}}:{{parseInt(song.duration%60)}}</span>
+                          </el-col>
+                        </el-row>
+                      </div>
+                    </div>
+                    <div v-if="songList.length==0" style="text-align: center;background-color: #f9f9f9;height: 30px;line-height: 30px;">无</div>
+                  </div>
+                </el-col>
+              </el-row>
+            </template>
+          </el-table-column>
           <el-table-column type="selection" width="55" align="center"/>
           <el-table-column label="歌单名" width="120" align="center" prop="slName"/>
           <el-table-column label="歌单封面" width="80" align="center" prop="coverPicture">
@@ -179,27 +272,32 @@
             <el-form-item label="专辑" prop="isAlbum">
               <el-radio-group v-model="form.isAlbum" size="medium">
                 <el-radio v-for="(item, index) in iss" :key="index" :label="item.value"
-                          :disabled="item.disabled">{{item.label}}</el-radio>
+                          :disabled="item.disabled">{{item.label}}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="公开" prop="isPublic">
               <el-radio-group v-model="form.isPublic" size="medium">
                 <el-radio v-for="(item, index) in iss" :key="index" :label="item.value"
-                          :disabled="item.disabled">{{item.label}}</el-radio>
+                          :disabled="item.disabled">{{item.label}}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="官方歌单" prop="isPublic">
               <el-radio-group v-model="form.isOff" size="medium">
                 <el-radio v-for="(item, index) in iss" :key="index" :label="item.value"
-                          :disabled="item.disabled">{{item.label}}</el-radio>
+                          :disabled="item.disabled">{{item.label}}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="用户" prop="user" style="margin-right:30px;">
-              <el-select id="select" class="user-select" v-model="form.createById" placeholder="请选择用户" @change="inputData" clearable>
+              <el-select id="select" class="user-select" v-model="form.createById" placeholder="请选择用户"
+                         @change="inputData" clearable>
                 <el-option v-for="(item, index) in this.userList" :key="index" :label="item.userName"
                            :value="item.userId" :disabled="item.disabled"></el-option>
               </el-select>
-              <el-input id="input" @keyup.enter.native="selectUser" @click="selectUser" class="user-input" v-model="form.userName" placeholder="请输入歌手名"  clearable/>
+              <el-input id="input" @keyup.enter.native="selectUser" @click="selectUser" class="user-input"
+                        v-model="form.userName" placeholder="请输入歌手名" clearable/>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -263,7 +361,7 @@
           <div class="top-right-btn">
             <el-row>
               <el-tooltip class="item" effect="dark" :content="showType ? '切换到数据列表' : '切换到一览表'" placement="top">
-                <el-button size="mini" circle icon="el-icon-sort" @click="changeShowType()" />
+                <el-button size="mini" circle icon="el-icon-sort" @click="changeShowType()"/>
               </el-tooltip>
             </el-row>
           </div>
@@ -275,7 +373,8 @@
                 <div class="songlist-item" v-for="(songlist,index) in songlists">
                   <router-link :to="{path:'/songlist/user-songlist',query:{songlist:songlist}}" class="link-type">
                     <div class="songlist-box">
-                      <div class="play-number"><Img :src="play" style="width: 10px;height: 10px;margin-right: 3px"/>{{songlist.playNumber}}</div>
+                      <div class="play-number"><Img :src="play" style="width: 10px;height: 10px;margin-right: 3px"/>{{songlist.playNumber}}
+                      </div>
                       <Img class="songlist-url" :src="baseUrl+songlist.coverPicture"/>
                       <span class="create-by">周日月的歌单</span>
                     </div>
@@ -306,37 +405,42 @@
     exportSonglist,
     getSonglistDetail,
     searchSonglist,
-    addSongToSl
+    addSongToSl,
+    selectSongDetail
   } from '@/api/business/songlist'
-  import {selectUser} from "@/api/system/user";
+  import { selectUser } from '@/api/system/user'
   import {
     listSong
   } from '@/api/business/song'
   import arrowRight from '@/assets/icons/arrow_right.png'
   import play from '@/assets/icons/play.png'
 
-
   export default {
     name: 'Songlist',
     data() {
       return {
-        play:play,
-        arrowRight:arrowRight,
-        songlists:[],
+        expands: [],
+        getRowKeys (row) {
+          return row.slId
+        },
+        songList: [],
+        play: play,
+        arrowRight: arrowRight,
+        songlists: [],
         showType: true,
         // 歌曲表格数据
         songList: [],
-        baseUrl:'http://47.114.190.44',
-        userList:[],
+        baseUrl: 'http://47.114.190.44',
+        userList: [],
         iss: [{
-          "label": "是",
-          "value": 1
+          'label': '是',
+          'value': 1
         }, {
-          "label": "否",
-          "value": 0
+          'label': '否',
+          'value': 0
         }],
-        currentFileNumber:0,
-        maxFileNumber:1,
+        currentFileNumber: 0,
+        maxFileNumber: 1,
         // 遮罩层
         loading: true,
         // 选中数组
@@ -349,7 +453,7 @@
         showSearch: true,
         // 总条数
         total: 0,
-        songtotal:0,
+        songtotal: 0,
         // 歌单表格数据
         songlistList: [],
         // 弹出层标题
@@ -358,17 +462,17 @@
         open: false,
         // 是否显示添加歌曲页
         openAddSong: false,
-        songtitle:'',
-        searchParams:{
-          wordKey:'',
-          createTime:null,
-          isAlbum:null,
-          pageSize:10,
-          pageNum:1
-        },
-        songParams:{
-          pageNum: 1,
+        songtitle: '',
+        searchParams: {
+          wordKey: '',
+          createTime: null,
+          isAlbum: null,
           pageSize: 10,
+          pageNum: 1
+        },
+        songParams: {
+          pageNum: 1,
+          pageSize: 10
         },
         // 查询参数
         queryParams: {
@@ -405,19 +509,19 @@
             required: true,
             message: '请选择下拉选择',
             trigger: 'change'
-          }],
+          }]
         },
-        albums:[{
-          "label": "否",
-          "value": 0
+        albums: [{
+          'label': '否',
+          'value': 0
         }, {
-          "label": "是",
-          "value": 1
+          'label': '是',
+          'value': 1
         }],
         formData: {
           field101: null
         },
-        addedSlId:0,
+        addedSlId: 0,
         rules: {},
         field101Action: 'http://127.0.0.1:8080/fdfs/upload',
         field101fileList: []
@@ -427,6 +531,20 @@
       this.getList()
     },
     methods: {
+      handleExpendRow(row, expandedRows) {
+        this.songList = []
+        if (expandedRows.length) {
+          this.expands = []
+          if (row) {
+            this.expands.push(row.slId)
+            selectSongDetail({slId: row.slId}).then(response => {
+              this.songList = response.rows
+            })
+          }
+        } else {
+          this.expands = []
+        }
+      },
       //获取歌曲列表
       getSongList() {
         listSong(this.songParams).then(response => {
@@ -434,18 +552,18 @@
           this.songtotal = response.songtotal
         })
       },
-      inputData(){
-        for(var i = 0;i < this.userList.length;i++) {
-          if(this.userList[i].userId==this.form.createById){
+      inputData() {
+        for (var i = 0; i < this.userList.length; i++) {
+          if (this.userList[i].userId == this.form.createById) {
             this.form.userName = this.userList[i].userName
           }
         }
       },
       /** 查询歌单列表 */
-      selectUser(){
-        selectUser({userName:this.form.userName}).then(response => {
+      selectUser() {
+        selectUser({ userName: this.form.userName }).then(response => {
           this.userList = response.rows
-          document.getElementById("select").click()
+          document.getElementById('select').click()
         })
 
       },
@@ -500,7 +618,7 @@
         this.resetForm('queryForm')
         this.handleQuery()
       },
-      songSelectionChange(selection){
+      songSelectionChange(selection) {
         this.songIds = selection.map(item => item.songId)
         this.single = selection.length !== 1
         this.multiple = !selection.length
@@ -521,9 +639,9 @@
       /** 添加歌曲操作 */
       handleAddToSl(row) {
         const songIds = row.songId || this.songIds
-        this.songParams.songIds = songIds;
-        this.songParams.slId = this.addedSlId;
-        if(this.form.isAlbum==null) {
+        this.songParams.songIds = songIds
+        this.songParams.slId = this.addedSlId
+        if (this.form.isAlbum == null) {
           this.songParams.isAlbum = 0
         } else {
           this.songParams.isAlbum = this.form.isAlbum
@@ -535,7 +653,7 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset()
-        this.field101fileList = [{name: '',url: this.baseUrl+row.coverPicture}]
+        this.field101fileList = [{ name: '', url: this.baseUrl + row.coverPicture }]
         const slId = row.slId || this.ids
         getSonglist(slId).then(response => {
           this.form = response.data
@@ -565,7 +683,7 @@
                   this.openAddSong = true
                   this.songtitle = '添加歌曲'
                   this.addedSlId = response.data
-                  this.getSongList(this.songParams);
+                  this.getSongList(this.songParams)
                 }
               })
             }
@@ -601,82 +719,134 @@
         }).catch(function() {
         })
       },
-      handleSuccess(response, file, fileList){
+      handleSuccess(response, file, fileList) {
         this.form.coverPicture = response
       },
       field101BeforeUpload(file) {
-          let isRightSize = file.size / 1024 / 1024 < 2
-          if (!isRightSize) {
-            alert('文件大小超过 2MB！')
-          }
-          return isRightSize
+        let isRightSize = file.size / 1024 / 1024 < 2
+        if (!isRightSize) {
+          alert('文件大小超过 2MB！')
+        }
+        return isRightSize
       },
-      changeShowType(){
-        if(this.showType){
-          getSonglistDetail({pageNum:1,pageSize:18}).then(response => {
-              this.songlists = response.rows
+      changeShowType() {
+        if (this.showType) {
+          getSonglistDetail({ pageNum: 1, pageSize: 18 }).then(response => {
+            this.songlists = response.rows
           })
-          this.showType = false;
+          this.showType = false
         } else {
-          this.showType = true;
+          this.showType = true
         }
       }
     }
   }
 </script>
 <style lang="scss" scoped>
+  .song-itme span {
+    margin-left: 10px;
+  }
+
+  .song-itme-w span {
+    margin-left: 10px;
+  }
+
+  .song-tag-title span {
+    margin-left: 10px;
+  }
+
+  .song-tag-title {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0px 10px;
+  }
+
+  .song-itme-w {
+    padding: 10px 10px;
+    background-color: #ffffff;
+  }
+
+  .song-itme-w:hover {
+    background-color: #f0f0f0;
+  }
+
+  .song-itme {
+    padding: 10px 10px;
+    background-color: #f9f9f9;
+  }
+
+  .song-itme:hover {
+    background-color: #f0f0f0;
+  }
+
+  .song-list {
+    color: #707070;
+    font-size: 14px;
+  }
+
   .top-right-btn {
     position: relative;
     float: right;
     margin-right: 10px;
   }
-  .user-select{
+
+  .user-select {
     width: 100%;
   }
-  .user-input{
+
+  .user-input {
     width: 100%;
     position: relative;
     top: -38px;
   }
+
   .search-item {
     float: left;
   }
-  .search-item{
+
+  .search-item {
     float: left;
   }
-  .input-magin{
+
+  .input-magin {
     margin-right: 30px
   }
+
   .information-title {
     color: #19d3ea;
     font-size: 12px;
-    width: 100px;   /*一定要设置宽度，或者元素内含的百分比*/
-    overflow:hidden; /*溢出的部分隐藏*/
+    width: 100px; /*一定要设置宽度，或者元素内含的百分比*/
+    overflow: hidden; /*溢出的部分隐藏*/
     white-space: nowrap; /*文本不换行*/
-    text-overflow:ellipsis;/*ellipsis:文本溢出显示省略号（...）；clip：不显示省略标记（...），而是简单的裁切*/
+    text-overflow: ellipsis; /*ellipsis:文本溢出显示省略号（...）；clip：不显示省略标记（...），而是简单的裁切*/
   }
 
   /* 一览表css */
-  .change-bar-2{
+  .change-bar-2 {
     position: absolute;
     right: 5px;
     top: 5px;
   }
-  .change-bar-1{
+
+  .change-bar-1 {
   }
-  .zf-item{
+
+  .zf-item {
     margin: 5px 10px;
   }
-  .zf{
+
+  .zf {
     display: flex;
     flex-wrap: wrap;
   }
-  .select{
+
+  .select {
     font-size: 13px;
     color: #707070;
     margin-left: 10px;
   }
-  .cover-h{
+
+  .cover-h {
     width: 110px;
     height: 110px;
     background-color: rgba(0, 0, 0, 0);
@@ -685,7 +855,8 @@
     bottom: 0;
     width: 100%;
   }
-  .cover-h:hover{
+
+  .cover-h:hover {
     width: 150px;
     height: 150px;
     background-color: rgba(0, 0, 0, 0.1);
@@ -696,12 +867,14 @@
     width: 100%;
     border-radius: 3px;
   }
-  .sl-name{
+
+  .sl-name {
     margin: 10px 0px;
     font-size: 14px;
     color: #707070;
   }
-  .create-by{
+
+  .create-by {
     padding: 5px;
     font-size: 11px;
     color: #ffffff;
@@ -712,40 +885,45 @@
     background-color: rgba(0, 0, 0, 0.2);
     position: absolute;
   }
-  .play-number{
+
+  .play-number {
     position: absolute;
     top: 5px;
     right: 10px;
     color: #ffffff;
     font-size: 14px;
   }
-  .songlist-url{
+
+  .songlist-url {
     width: 150px;
     height: 150px;
     border-radius: 3px;
   }
 
-  .songlist-box{
+  .songlist-box {
     width: 150px;
     height: 150px;
     position: relative;
   }
-  .songlist-item{
+
+  .songlist-item {
     margin: 20px 10px;
   }
-  .bar-main{
-    display:flex;
+
+  .bar-main {
+    display: flex;
     flex-wrap: wrap;
     font-family: "Microsoft YaHei";
   }
+
   .dashboard-editor-container {
     padding: 32px;
     background-color: rgb(240, 242, 245);
     position: relative;
 
-  .chart-wrapper {
-    background: #fff;
-    padding: 32px;
-  }
+    .chart-wrapper {
+      background: #fff;
+      padding: 32px;
+    }
   }
 </style>

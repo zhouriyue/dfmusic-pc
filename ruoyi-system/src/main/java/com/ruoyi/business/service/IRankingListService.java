@@ -65,4 +65,7 @@ public interface IRankingListService
     public List<RankingList> getNotOff();
 
     public List<Song> getWorldSong(Integer rlType);
+
+    /**　获取热门排行榜**/
+    public List<RankingList> getHotRankingList(int pageNum,int size);
 }

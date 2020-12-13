@@ -2,6 +2,7 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.Collectiones;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 歌单收藏Mapper接口
@@ -58,4 +59,7 @@ public interface CollectionesMapper
      * @return 结果
      */
     public int deleteCollectionesByIds(Long[] colIds);
+
+    /** 取消收藏 **/
+    public int cancel(@Param("userId") Long userId,@Param("slId") Long slId);
 }

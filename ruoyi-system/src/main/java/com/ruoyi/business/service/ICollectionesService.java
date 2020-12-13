@@ -58,4 +58,7 @@ public interface ICollectionesService
      * @return 结果
      */
     public int deleteCollectionesById(Long colId);
+
+    /** 取消收藏 **/
+    public void cancel(Long userId,Long slId);
 }

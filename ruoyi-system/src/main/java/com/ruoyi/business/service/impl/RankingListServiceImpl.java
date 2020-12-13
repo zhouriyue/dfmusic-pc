@@ -107,4 +107,9 @@ public class RankingListServiceImpl implements IRankingListService
     public List<Song> getWorldSong(Integer rlType) {
         return rankingListMapper.getWorldSong(rlType);
     }
+
+    @Override
+    public List<RankingList> getHotRankingList(int pageNum, int size) {
+        return rankingListMapper.getHotRankingList(pageNum,size);
+    }
 }

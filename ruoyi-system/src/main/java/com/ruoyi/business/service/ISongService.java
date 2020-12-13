@@ -62,6 +62,13 @@ public interface ISongService
      */
     public int deleteSongById(Long songId);
 
+    /**
+     * 上下架
+     * @param song
+     * @return
+     */
+    public int offSongs(Song song);
+
     public List<Song> selectSongKey(String wordKey);
 
     public List<Song> selectAll(Long slId);
@@ -75,5 +82,9 @@ public interface ISongService
     public List<Song> getOriginalSong();
 
     public List<Song> getHotSong();
+
+    public List<Song> selectHotSong(int pageNum,int size);
+
+    public List<Song> selectTodeyHot(int pageNum,int size);
 
 }

@@ -151,6 +151,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY s.play_number desc LIMIT 0,50
     </select>
 
+    <!--获取热门排行榜-->
+    <select id="getHotRankingList" resultMap="RankingListResult">
+        <include refid="selectRankingListVo"/>
+        ORDER BY play_number desc
+        LIMIT #{pageNum},#{size}
+    </select>
+
     <insert id="insertRankingList" parameterType="RankingList">
         insert into ranking_list
         <trim prefix="(" suffix=")" suffixOverrides=",">

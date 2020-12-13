@@ -97,4 +97,7 @@ public interface SonglistMapper
     public Long addSongToSl(@Param("slId") Long slId,@Param("isAlbum") Integer isAlbum,@Param("songIds") Long[] songIds);
 
     public Long deleteSonglisSong(Long slId);
+
+    /** 获取热门歌单 **/
+    public List<Songlist> getHotSonglist(@Param("pageNum") int pageNum,@Param("size") int size);
 }

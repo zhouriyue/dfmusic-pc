@@ -38,16 +38,52 @@ public class RankingListController extends BaseController
     @Autowired
     private ISongService songService;
 
+    /** 获取热门排行榜 **/
+    @GetMapping("/getHotRankingList/android")
+    public List<RankingList> getHotRankingList(int pageNum,int size){
+        return rankingListService.getHotRankingList(pageNum,size);
+    }
+
     /** 获取全球榜的歌曲 **/
     @GetMapping("/getWorldSong")
     public TableDataInfo getWorldSong(Integer rlType){
         return getDataTable(rankingListService.getWorldSong(rlType));
     }
 
+    /** 获取全球排行榜 安卓端**/
+    @GetMapping("/getNotOff/android")
+    public List<RankingList> getNotOffAndroid(){
+        return rankingListService.getNotOff();
+    }
+
     /** 获取全球排行榜 **/
     @GetMapping("/getNotOff")
     public TableDataInfo getNotOff(){
         return getDataTable(rankingListService.getNotOff());
+    }
+
+    /** 获取官方排行榜 安卓端 **/
+    @GetMapping("/getOffRankingList/android")
+    public List<RankingList> getOffRankingListAndroid(){
+        startPage();
+        List<RankingList> rankingLists = rankingListService.getOffRankingList();
+        for(RankingList rankingList:rankingLists) {
+            switch (rankingList.getRlType()){
+                case -1:{
+                    rankingList.setSongList(songService.getRiseSong());
+                };break;
+                case -2:{
+                    rankingList.setSongList(songService.getNewSong());
+                };break;
+                case -3:{
+                    rankingList.setSongList(songService.getOriginalSong());
+                };break;
+                case -4:{
+                    rankingList.setSongList(songService.getHotSong());
+                };break;
+            }
+        }
+        return rankingLists;
     }
 
     /** 获取官方排行榜 **/

@@ -71,8 +71,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCollectionesList" parameterType="Collectiones" resultMap="CollectionesResult">
         <include refid="selectCollectionesVo"/>
         <where>  
-            <if test="colId != null "> and col_id = #{colId}</if>
-            <if test="slId != null "> and sl_id = #{slId}</if>
+            <if test="colId != null "> and col.col_id = #{colId}</if>
+            <if test="slId != null "> and sl.sl_id = #{slId}</if>
             <if test="wordKey != null "> and u.user_name like concat('%', #{wordKey}, '%')</if>
             <if test="createTime != null "> and year(col.create_time) = year(#{createTime}) and month(col.create_time) = month(#{createTime}) and day(col.create_time) = day(#{createTime})</if>
         </where>
@@ -118,6 +118,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <delete id="deleteCollectionesById" parameterType="Long">
         delete from collectiones where col_id = #{colId}
+    </delete>
+
+    <!--取消收藏-->
+    <delete id="cancel">
+        delete from collectiones where collect_by = #{userId} and sl_id = #{slId}
     </delete>
 
     <delete id="deleteCollectionesByIds" parameterType="String">

@@ -100,6 +100,8 @@ public class Song extends BaseEntity
 
     private Songlist songlistes;
 
+    private Long[] songIds;
+
     private Long[] stIds;
 
     private Long[] sinIds;
@@ -109,6 +111,8 @@ public class Song extends BaseEntity
 
     /** 删除标识符 */
     private Integer delFlag;
+
+    private String detail;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -314,6 +318,14 @@ public class Song extends BaseEntity
         this.songlistes = songlistes;
     }
 
+    public Long[] getSongIds() {
+        return songIds;
+    }
+
+    public void setSongIds(Long[] songIds) {
+        this.songIds = songIds;
+    }
+
     public Long[] getSinIds() {
         return sinIds;
     }
@@ -344,5 +356,13 @@ public class Song extends BaseEntity
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }

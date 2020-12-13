@@ -153,4 +153,9 @@ public class SonglistServiceImpl implements ISonglistService
     public Long addSongToSl(Long slId,Integer isAlbum, Long[] songIds) {
         return songlistMapper.addSongToSl(slId,isAlbum,songIds);
     }
+
+    @Override
+    public List<Songlist> getHotSonglist(int pageNum,int size) {
+        return songlistMapper.getHotSonglist(pageNum,size);
+    }
 }

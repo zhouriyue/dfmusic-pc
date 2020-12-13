@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.business.domain.Singer;
 import com.ruoyi.business.domain.Song;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 歌曲Mapper接口
@@ -54,6 +55,13 @@ public interface SongMapper
     public int deleteSongById(Long songId);
 
     /**
+     * 上下架歌曲
+     * @param song
+     * @return
+     */
+    public int offSongs(Song song);
+
+    /**
      * 批量删除歌曲
      * 
      * @param songIds 需要删除的数据ID
@@ -74,4 +82,8 @@ public interface SongMapper
     public List<Song> getOriginalSong();
 
     public List<Song> getHotSong();
+
+    public List<Song> selectHotSong(@Param("pageNum") int pageNum,@Param("size") int size);
+
+    public List<Song> selectTodeyHot(@Param("pageNum") int pageNum,@Param("size") int size);
 }

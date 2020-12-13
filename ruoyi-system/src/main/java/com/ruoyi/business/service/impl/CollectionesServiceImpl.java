@@ -93,4 +93,9 @@ public class CollectionesServiceImpl implements ICollectionesService
     {
         return collectionesMapper.deleteCollectionesById(colId);
     }
+
+    @Override
+    public void cancel(Long userId, Long slId) {
+        collectionesMapper.cancel(userId,slId);
+    }
 }

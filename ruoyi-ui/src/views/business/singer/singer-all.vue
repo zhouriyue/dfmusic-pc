@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard-editor-container">
-
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
@@ -161,12 +160,21 @@
 
   .dashboard-editor-container {
     padding: 32px;
+    min-height: 2000px;
     background-color: rgb(240, 242, 245);
     position: relative;
 
     .chart-wrapper {
       background: #fff;
-      padding: 32px;
+      padding: 16px 16px 0;
+      margin-bottom: 32px;
+      min-height: 300px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .chart-wrapper {
+      padding: 8px;
     }
   }
 </style>

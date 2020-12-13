@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SpecialFunMapper">
+    
+    <resultMap type="SpecialFun" id="SpecialFunResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="icon"    column="icon"    />
+        <result property="path"    column="path"    />
+    </resultMap>
+
+    <sql id="selectSpecialFunVo">
+        select id, title, icon, path from special_fun
+    </sql>
+
+    <select id="selectSpecialFunList" parameterType="SpecialFun" resultMap="SpecialFunResult">
+        <include refid="selectSpecialFunVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+        </where>
+    </select>
+    
+    <select id="selectSpecialFunById" parameterType="Long" resultMap="SpecialFunResult">
+        <include refid="selectSpecialFunVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSpecialFun" parameterType="SpecialFun" useGeneratedKeys="true" keyProperty="id">
+        insert into special_fun
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="icon != null">icon,</if>
+            <if test="path != null">path,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="path != null">#{path},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSpecialFun" parameterType="SpecialFun">
+        update special_fun
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="path != null">path = #{path},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSpecialFunById" parameterType="Long">
+        delete from special_fun where id = #{id}
+    </delete>
+
+    <delete id="deleteSpecialFunByIds" parameterType="String">
+        delete from special_fun where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

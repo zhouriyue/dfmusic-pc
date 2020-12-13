@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.FindMapper">
+    
+    <resultMap type="Find" id="FindResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="toMangy"    column="to_mangy"    />
+        <result property="icon"    column="icon"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectFindVo">
+        select id, title, to_mangy, icon,serial type from find
+    </sql>
+
+    <select id="selectFindList" parameterType="Find" resultMap="FindResult">
+        <include refid="selectFindVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="toMangy != null  and toMangy != ''"> and to_mangy = #{toMangy}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+        order by serial
+    </select>
+    
+    <select id="selectFindById" parameterType="Long" resultMap="FindResult">
+        <include refid="selectFindVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFind" parameterType="Find" useGeneratedKeys="true" keyProperty="id">
+        insert into find
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="toMangy != null">to_mangy,</if>
+            <if test="icon != null">icon,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="toMangy != null">#{toMangy},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFind" parameterType="Find">
+        update find
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="toMangy != null">to_mangy = #{toMangy},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFindById" parameterType="Long">
+        delete from find where id = #{id}
+    </delete>
+
+    <delete id="deleteFindByIds" parameterType="String">
+        delete from find where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

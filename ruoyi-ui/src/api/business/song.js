@@ -49,7 +49,21 @@ export function addSong(data) {
     data: data
   })
 }
-
+export function offSongs(data) {
+  return request({
+    url: '/business/song/offSongs',
+    method: 'put',
+    data: data
+  })
+}
+// 下架歌曲
+export function offSong(data) {
+  return request({
+    url: '/business/song/offSong',
+    method: 'put',
+    data: data
+  })
+}
 // 修改歌曲
 export function updateSong(data) {
   return request({

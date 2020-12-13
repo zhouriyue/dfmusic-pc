@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BannersMapper">
+    
+    <resultMap type="Banners" id="BannersResult">
+        <result property="id"    column="id"    />
+        <result property="image"    column="image"    />
+        <result property="path"    column="path"    />
+    </resultMap>
+
+    <sql id="selectBannersVo">
+        select id, image, path from banners
+    </sql>
+
+    <select id="selectBannersList" parameterType="Banners" resultMap="BannersResult">
+        <include refid="selectBannersVo"/>
+        <where>  
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+        </where>
+    </select>
+    
+    <select id="selectBannersById" parameterType="Long" resultMap="BannersResult">
+        <include refid="selectBannersVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBanners" parameterType="Banners" useGeneratedKeys="true" keyProperty="id">
+        insert into banners
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="image != null">image,</if>
+            <if test="path != null">path,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="image != null">#{image},</if>
+            <if test="path != null">#{path},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBanners" parameterType="Banners">
+        update banners
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="image != null">image = #{image},</if>
+            <if test="path != null">path = #{path},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBannersById" parameterType="Long">
+        delete from banners where id = #{id}
+    </delete>
+
+    <delete id="deleteBannersByIds" parameterType="String">
+        delete from banners where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

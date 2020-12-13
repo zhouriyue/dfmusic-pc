@@ -201,10 +201,12 @@
     padding: 32px;
     background-color: rgb(240, 242, 245);
     position: relative;
+    min-height: 2000px;
 
     .chart-wrapper {
       background: #fff;
       padding: 32px;
+      min-height: 700px;
     }
   }
 </style>

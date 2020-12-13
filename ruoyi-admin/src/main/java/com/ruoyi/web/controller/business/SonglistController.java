@@ -31,13 +31,18 @@ public class SonglistController extends BaseController
     @Autowired
     private ISonglistService songlistService;
 
+    /** 获取热门歌单 **/
+    @GetMapping("/getHotSonglist/android")
+    public List<Songlist> getHotSonglist(Integer pageNum,Integer pageSize){
+        return songlistService.getHotSonglist(pageNum,pageSize);
+    }
+
     /**
      * 查询歌单列表
      */
     @GetMapping("/searchSonglistKey")
     public TableDataInfo searchSonglistKey(Songlist songlist)
     {
-        System.out.println(songlist.toString());
         List<Songlist> list = songlistService.selectSonglistList(songlist);
         return getDataTable(list);
     }
@@ -158,6 +163,12 @@ public class SonglistController extends BaseController
         } else {
             return null;
         }
+    }
+
+    @GetMapping("/findBySlId/android")
+    public Songlist findBySlId(Long slId) {
+        Songlist songlist = songlistService.selectSonglistById(slId);
+        return songlist;
     }
 
     /**

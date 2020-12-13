@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="delTime"    column="del_time"    />
         <result property="delFlag"    column="del_flag"    />
+        <association property="sysUser" javaType="SysUser" resultMap="SysUserResult" />
     </resultMap>
 
     <resultMap type="Song" id="SongResult">
@@ -50,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="todayPlay"    column="today_play"    />
         <result property="playNumber"    column="play_number"    />
         <result property="isOriginal"    column="is_original"    />
+        <result property="timbreType"    column="timbre_type"    />
         <association property="songlistes"    column="sl_id" javaType="songlist" resultMap="SonglistResult" />
         <collection  property="singerList"   javaType="java.util.List" resultMap="SingerResult"/>
     </resultMap>
@@ -132,12 +134,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectSonglistdetailVo">
         select sl.sl_id, sl.sl_name, sl.cover_picture, sl.sl_title, sl.play_number, (SELECT COUNT(*) FROM song_songlist as ssll where ssll.sl_id = sl.sl_id) as song_number,
         sl.col_number, sl.comments_number, sl.share_number, sl.create_by_id, sl.detail, sl.is_album,sl.is_off,
-        sl.is_public, sl.create_time, sl.update_time,u.user_name as user_name,u.nick_name as nick_name
-        from songlist sl,sys_user u
+        sl.is_public, sl.create_time, sl.update_time,u.user_id as user_id,u.user_name as user_name,u.nick_name as nick_name,
+        u.email as email, u.avatar as avatar, u.phonenumber as phonenumber, u.sex as sex
+        from songlist sl
+           left join sys_user u on u.user_id=sl.create_by_id
     </sql>
 
     <sql id="songToSonglistVo">
-        select s.song_id, s.song_name, s.cover_picture, s.duration, s.issuing_date, s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.standard_url, s.hq_url, s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time,s.del_flag
+        select s.song_id, s.song_name, s.cover_picture, s.duration, s.issuing_date, s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.standard_url, s.hq_url, s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time,s.del_flag,s.timbre_type,
         from song_songlist ssli,song s
     </sql>
 
@@ -159,7 +163,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select s.song_id, s.song_name,s.cover_picture, s.sin_id, s.duration, s.issuing_date,
         s.mv_url, s.is_charge, s.is_copyright, s.is_single, s.sl_id, s.standard_url, s.hq_url,
         s.sq_url, s.wit_pre_url, s.lyr_id, s.create_time, s.update_time, s.del_time, s.del_flag,
-        s.today_play,s.play_number,s.is_original,
+        s.today_play,s.play_number,s.is_original,s.timbre_type,
         sr.sin_id, sr.sin_name, sr.nickname, sr.sex, sr.year, sr.sin_type, sr.area,
         sr.song_number, sr.follower_number, sr.album_number, sr.mv_number,sr.human_qi,
         sr.detail, sr.influence_power, sr.cert_info, sr.early_exp, sr.performing_exp,
@@ -172,7 +176,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectSonglistList" parameterType="Songlist" resultMap="SonglistResult">
-        <include refid="selectSonglistVo"/>
+        <include refid="selectSonglistdetailVo"/>
         <where>
             <if test="slId != null "> and sl.sl_id = #{slId}</if>
             <if test="slName != null  and slName != ''"> and sl.sl_name like concat('%', #{slName}, '%')</if>
@@ -194,7 +198,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectSonglistById" parameterType="Long" resultMap="SonglistResult">
-        <include refid="selectSonglistVo"/>
+        <include refid="selectSonglistdetailVo"/>
         where sl_id = #{slId}
     </select>
 
@@ -214,6 +218,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             u.user_id = sl.create_by_id
             <if test="slId != null "> and sl.sl_id = #{slId}</if>
         </where>
+    </select>
+
+    <!--获取热门歌单-->
+    <select id="getHotSonglist" resultMap="SonglistResult">
+        <include refid="selectSonglistdetailVo"/>
+        order by play_number desc
+        limit #{pageNum},#{size}
     </select>
 
     <!--获取歌曲详情-->

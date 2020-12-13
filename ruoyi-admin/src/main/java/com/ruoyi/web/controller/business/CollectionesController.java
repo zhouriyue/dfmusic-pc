@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.business;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +34,50 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/business/collectiones")
 public class CollectionesController extends BaseController
 {
+    public final static String FLAG = "flag";
     @Autowired
     private ICollectionesService collectionesService;
+
+    /** 取消收藏 **/
+    @PostMapping("/cancel/android")
+    public void cancel(Long userId,Long slId){
+        collectionesService.cancel(userId,slId);
+    }
+
+    /**
+     * 查询歌单收藏列表
+     * 安卓端
+     */
+    @GetMapping("/findAll/android")
+    public List<Collectiones> findAll(Collectiones collectiones,Integer pageNum,Integer size)
+    {
+        if(pageNum!=null&&size!=null) {
+            startPage(pageNum,size);
+        }
+        List<Collectiones> list = collectionesService.selectCollectionesList(collectiones);
+        return list;
+    }
+
+    @PostMapping("/addAnd/android")
+    public void addAnd(Collectiones collectiones)
+    {
+        collectionesService.insertCollectiones(collectiones);
+    }
+
+    @GetMapping("/isCollect/android")
+    public Map<String,Boolean> isCollect(Long userId,Long slId){
+        Collectiones collectiones = new Collectiones();
+        collectiones.setCollectBy(userId);
+        collectiones.setSlId(slId);
+        List<Collectiones> collectionesList = collectionesService.selectCollectionesList(collectiones);
+        Map<String,Boolean> object = new HashMap<>();
+        if(collectionesList.size()>0){
+            object.put(FLAG,true);
+        } else {
+            object.put(FLAG,false);
+        }
+        return object;
+    }
 
     /**
      * 查询歌单收藏列表
